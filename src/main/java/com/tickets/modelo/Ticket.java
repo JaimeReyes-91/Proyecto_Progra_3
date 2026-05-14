@@ -1,7 +1,5 @@
 package com.tickets.modelo;
 
-
-
 import java.time.LocalDateTime;
 
 public class Ticket {
@@ -9,18 +7,16 @@ public class Ticket {
 	private int id;
 	private String codigo;
 	private String descripcion;
-	private String estadoActual;
+	private EstadoTicket estadoActual;
 	private LocalDateTime fechaCreacion;
 	private LocalDateTime fechaCierre;
 	private int creadoPor;
 	private Integer asignadoA;
 
-	
 	public Ticket() {
 	}
 
-	
-	public Ticket(int id, String codigo, String descripcion, String estadoActual, LocalDateTime fechaCreacion,
+	public Ticket(int id, String codigo, String descripcion, EstadoTicket estadoActual, LocalDateTime fechaCreacion,
 			LocalDateTime fechaCierre, int creadoPor, Integer asignadoA) {
 		this.id = id;
 		this.codigo = codigo;
@@ -32,7 +28,6 @@ public class Ticket {
 		this.asignadoA = asignadoA;
 	}
 
-	
 	public int getId() {
 		return id;
 	}
@@ -57,11 +52,11 @@ public class Ticket {
 		this.descripcion = descripcion;
 	}
 
-	public String getEstadoActual() {
+	public EstadoTicket getEstadoActual() {
 		return estadoActual;
 	}
 
-	public void setEstadoActual(String estadoActual) {
+	public void setEstadoActual(EstadoTicket estadoActual) {
 		this.estadoActual = estadoActual;
 	}
 
