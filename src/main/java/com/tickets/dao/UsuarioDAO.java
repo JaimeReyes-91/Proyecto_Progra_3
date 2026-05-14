@@ -1,9 +1,8 @@
 package com.tickets.dao;
 
 import java.sql.Connection;
+import java.sql.PreparedStatement;
 import java.sql.ResultSet;
-import java.sql.SQLException;
-import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.List;
 import com.tickets.modelo.Usuario;
@@ -11,27 +10,63 @@ import com.tickets.util.ConexionDB;
 
 
 public class UsuarioDAO {
-	public List<Usuario> obtenerTodos(){
-		List<Usuario> lista = new ArrayList<>();
-		String sql = "SELECT * FROM autores";
-		try (Connection con = ConexionDB.obtener();
-	         Statement  st  = con.createStatement();
-	         ResultSet  rs  = st.executeQuery(sql)) {
-			 while (rs.next()) {
-				Usuario a = new Usuario();
-                a.setId(rs.getInt("id"));
-                a.setNombre(rs.getString("nombre"));
-                a.setCorreo(rs.getString("correo"));
-                a.setDepartamento(rs.getString("departamento"));
-                a.setRol(rs.getString("rol"));
-                a.setFecha_creacion(rs.getTimestamp("fecha_creacion"));
-                a.setContrasena(rs.getString("contrasena"));
-                lista.add(a);
-		}
-		} catch (SQLException e) {
-            e.printStackTrace();
+
+    public void crearUsuario(Usuario usuario) throws Exception {
+
+        String sql = """
+                INSERT INTO usuarios(
+                nombre,
+                correo,
+                departamento,
+                rol,
+				contrasena
+                )
+                VALUES (?, ?, ?, ?, ?)
+                """;
+
+        try (Connection con = ConexionDB.obtener();
+             PreparedStatement ps = con.prepareStatement(sql)) {
+
+            ps.setString(1, usuario.getNombre());
+            ps.setString(2, usuario.getCorreo());
+            ps.setString(3, usuario.getDepartamento());
+            ps.setString(4, usuario.getRol());
+			ps.setString(5, usuario.getContrasena());
+            ps.executeUpdate();
         }
-		return lista;
-		
-	}
+    }
+
+    public List<Usuario> listarUsuarios() throws Exception {
+
+        List<Usuario> lista = new ArrayList<>();
+
+        String sql = "SELECT * FROM usuarios ORDER BY id";
+
+        try (Connection con = ConexionDB.obtener();
+             PreparedStatement ps = con.prepareStatement(sql);
+             ResultSet rs = ps.executeQuery()) {
+
+            while (rs.next()) {
+
+                Usuario usuario = new Usuario();
+
+                usuario.setId(rs.getInt("id"));
+                usuario.setNombre(rs.getString("nombre"));
+                usuario.setCorreo(rs.getString("correo"));
+                usuario.setDepartamento(
+                        rs.getString("departamento")
+                );
+                usuario.setRol(rs.getString("rol"));
+				usuario.setContrasena(rs.getString("contrasena"));
+
+                lista.add(usuario);
+            }
+        }
+
+        return lista;
+    }
 }
+
+
+	
+
