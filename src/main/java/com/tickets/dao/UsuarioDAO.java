@@ -57,6 +57,7 @@ public class UsuarioDAO {
                         rs.getString("departamento")
                 );
                 usuario.setRol(rs.getString("rol"));
+				usuario.setFecha_creacion(rs.getTimestamp("fecha_creacion"));
 				usuario.setContrasena(rs.getString("contrasena"));
 
                 lista.add(usuario);
