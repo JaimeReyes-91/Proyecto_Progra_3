@@ -1,8 +1,17 @@
 package com.tickets.config;
 
-public class AplicacionConfig {
+import org.glassfish.jersey.jackson.JacksonFeature;
+import org.glassfish.jersey.media.multipart.MultiPartFeature;
+import org.glassfish.jersey.server.ResourceConfig;
 
-	/*@ApplicationPath("/api")
-	public class ApplicationConfig extends ResourceConfig {
-	}*/
+public class AplicacionConfig extends ResourceConfig {
+
+	 public AplicacionConfig() {
+
+	        packages("com.tickets.recurso");
+
+	        register(JacksonFeature.class);
+	        register(MultiPartFeature.class);
+	        DatabaseInitializer.inicializar();
+	    }
 }
