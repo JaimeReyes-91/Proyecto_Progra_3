@@ -24,7 +24,7 @@ public class UsuarioDAO {
                 VALUES (?, ?, ?, ?, ?)
                 """;
 
-        try (Connection con = ConexionDB.obtener();
+        try (Connection con = ConexionDB.obtenerConexion();
              PreparedStatement ps = con.prepareStatement(sql)) {
 
             ps.setString(1, usuario.getNombre());
@@ -42,7 +42,7 @@ public class UsuarioDAO {
 
         String sql = "SELECT * FROM usuarios ORDER BY id";
 
-        try (Connection con = ConexionDB.obtener();
+        try (Connection con = ConexionDB.obtenerConexion();
              PreparedStatement ps = con.prepareStatement(sql);
              ResultSet rs = ps.executeQuery()) {
 
