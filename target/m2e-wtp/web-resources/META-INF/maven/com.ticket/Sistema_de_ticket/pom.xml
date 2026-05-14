@@ -5,7 +5,7 @@
 
     <modelVersion>4.0.0</modelVersion>
 
-    <groupId>Sistema_de_ticket</groupId>
+    <groupId>com.ticket</groupId>
     <artifactId>Sistema_de_ticket</artifactId>
     <version>0.0.1-SNAPSHOT</version>
     <packaging>war</packaging>
