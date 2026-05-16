@@ -4,14 +4,12 @@ import com.tickets.util.ConexionDB;
 import com.tickets.modelo.LineaTiempoEvento;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.util.ArrayList;
-import java.util.List;
+import java.sql.SQLException;
 
 public class TimeLineDAO {
 	
 	public void registrar(LineaTiempoEvento timeline)
-		throws Exception{
+		{
 		String sql = """
                 INSERT INTO ticket_timeline(
                 ticket_id,
@@ -22,10 +20,8 @@ public class TimeLineDAO {
                 VALUES (?, ?, ?, ?)
                 """;
 		
-		try (
-                Connection con = ConexionDB.obtenerConexion();
-                PreparedStatement ps = con.prepareStatement(sql)
-        ) {
+		try (Connection con = ConexionDB.obtenerConexion();
+                PreparedStatement ps = con.prepareStatement(sql)) {
 
             ps.setInt(1, timeline.getTicketId());
             ps.setInt(2, timeline.getActorId());
@@ -33,7 +29,10 @@ public class TimeLineDAO {
             ps.setString(4, timeline.getObservacion());
 
             ps.executeUpdate();
+        }catch (SQLException e) {
+        	e.printStackTrace();
         }
+		
     }
 }
 

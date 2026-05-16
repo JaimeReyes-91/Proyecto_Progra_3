@@ -12,14 +12,11 @@ public class LineaTiempoEvento {
 	
 	public LineaTiempoEvento() {}
 
-	public LineaTiempoEvento(int id, int ticketId, int actorId, String estado, String observacion,
-			LocalDateTime fechaEvento) {
-		this.id = id;
+	public LineaTiempoEvento(int ticketId, int actorId, String estado, String observacion) {
 		this.ticketId = ticketId;
 		this.actorId = actorId;
 		this.estado = estado;
 		this.observacion = observacion;
-		this.fechaEvento = fechaEvento;
 	}
 
 
