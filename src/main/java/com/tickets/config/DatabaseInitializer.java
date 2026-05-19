@@ -1,9 +1,9 @@
 package com.tickets.config;
 
-import com.tickets.util.ConexionDB;
-
 import java.sql.Connection;
 import java.sql.Statement;
+
+import com.tickets.util.ConexionDB;
 
 public class DatabaseInitializer {
 
@@ -17,9 +17,9 @@ public class DatabaseInitializer {
             st.execute(ScriptsSQL.TABLA_USUARIOS);
 
             st.execute(ScriptsSQL.TABLA_TICKETS);
-            
+
             st.execute(ScriptsSQL.TABLA_TICKET_ADJUNTOS);
-            
+
             st.execute(ScriptsSQL.TABLA_TICKET_TIMELINE);
 
             System.out.println(

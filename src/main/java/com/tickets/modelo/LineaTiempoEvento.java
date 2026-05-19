@@ -2,14 +2,14 @@ package com.tickets.modelo;
 
 import java.time.LocalDateTime;
 public class LineaTiempoEvento {
-	
+
 	private int id;
 	private int ticketId;
 	private int actorId;
 	private String estado;
 	private String observacion;
 	private LocalDateTime fechaEvento;
-	
+
 	public LineaTiempoEvento() {}
 
 	public LineaTiempoEvento(int ticketId, int actorId, String estado, String observacion) {

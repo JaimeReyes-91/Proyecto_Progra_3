@@ -18,33 +18,35 @@
     </properties>
 	
     <dependencies>
-        <!-- Jersey-->
-        <dependency>
-            <groupId>org.glassfish.jersey.containers</groupId>
-            <artifactId>jersey-container-servlet</artifactId>
-            <version>3.1.0</version>
-        </dependency>
-
-        <!-- Jersey HK2: inyección de dependencias -->
-        <dependency>
-            <groupId>org.glassfish.jersey.inject</groupId>
-            <artifactId>jersey-hk2</artifactId>
-            <version>3.1.0</version>
-        </dependency>
-
-        <!-- Jersey JSON Binding -->
-        <dependency>
-            <groupId>org.glassfish.jersey.media</groupId>
-            <artifactId>jersey-media-json-binding</artifactId>
-            <version>3.1.0</version>
-        </dependency>
-
-		<!-- JSON -->
-        <dependency>
-            <groupId>org.glassfish.jersey.media</groupId>
-            <artifactId>jersey-media-json-jackson</artifactId>
-            <version>3.1.5</version>
-        </dependency>
+    
+    <!-- Jersey Servlet -->
+		<dependency>
+		    <groupId>org.glassfish.jersey.containers</groupId>
+		    <artifactId>jersey-container-servlet</artifactId>
+		    <version>3.1.5</version>
+		</dependency>
+		
+		<!-- Jersey HK2 -->
+		<dependency>
+		    <groupId>org.glassfish.jersey.inject</groupId>
+		    <artifactId>jersey-hk2</artifactId>
+		    <version>3.1.5</version>
+		</dependency>
+		
+		<!-- Jersey Jackson -->
+		<dependency>
+		    <groupId>org.glassfish.jersey.media</groupId>
+		    <artifactId>jersey-media-json-jackson</artifactId>
+		    <version>3.1.5</version>
+		</dependency>
+		
+		<!-- Multipart -->
+		<dependency>
+		    <groupId>org.glassfish.jersey.media</groupId>
+		    <artifactId>jersey-media-multipart</artifactId>
+		    <version>3.1.5</version>
+		</dependency>
+       
         
         <!-- Jakarta Servlet API (ya incluida en Tomcat) -->
         <dependency>
@@ -54,12 +56,7 @@
             <scope>provided</scope>
         </dependency>
         
-        <!-- Multipart -->
-        <dependency>
-            <groupId>org.glassfish.jersey.media</groupId>
-            <artifactId>jersey-media-multipart</artifactId>
-            <version>3.1.5</version>
-        </dependency>
+
         
         <!-- Driver JDBC de PostgreSQL -->
 		<!-- Permite a Java conectarse directamente a PostgreSQL -->

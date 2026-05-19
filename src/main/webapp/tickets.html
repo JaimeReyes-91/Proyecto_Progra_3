@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Tickets | Sistema de Tickets</title>
+    <link rel="stylesheet" href="css/global.css">
+    <link rel="stylesheet" href="css/tickets.css">
+</head>
+<body>
+    <div class="app-shell">
+        <aside class="sidebar">
+            <div class="brand">
+                <strong>Tickets</strong>
+                <span>Soporte interno</span>
+            </div>
+            <nav>
+                <a class="nav-link" href="dashboard.html">Dashboard</a>
+                <a class="nav-link active" href="tickets.html">Tickets</a>
+                <a class="nav-link" id="linkUsuarios" href="usuarios.html">Usuarios</a>
+                <a class="nav-link" href="#" id="logoutLink">Salir</a>
+            </nav>
+        </aside>
+
+        <main class="main">
+            <header class="topbar">
+                <div>
+                    <h1>Gestión de tickets</h1>
+                    <p>Registra solicitudes, consulta estados y avanza el flujo de atención.</p>
+                </div>
+                <div class="user-chip" id="usuarioActivo">Sesión activa</div>
+            </header>
+
+            <section class="grid two">
+                <article class="card">
+                    <div class="card-header">
+                        <div>
+                            <h2>Nuevo ticket</h2>
+                            <p>Describe con claridad la solicitud para soporte.</p>
+                        </div>
+                    </div>
+
+                    <form id="ticketForm" class="form-grid">
+                        <div class="field">
+                            <label for="descripcion">Descripción</label>
+                            <textarea id="descripcion" required></textarea>
+                        </div>
+
+                        <div class="field" id="creadoPorField">
+                            <label for="creadoPor">ID del solicitante</label>
+                            <input type="number" id="creadoPor" min="1" required>
+                        </div>
+
+                        <button class="btn" type="submit">Crear ticket</button>
+                    </form>
+
+                    <p id="mensaje" class="message"></p>
+                </article>
+
+                <article class="card">
+                    <div class="card-header">
+                        <div>
+                            <h2>Lista de tickets</h2>
+                            <p>Usa el filtro para encontrar tickets por código, estado o descripción.</p>
+                        </div>
+                    </div>
+
+                    <div class="field">
+                        <label for="filtroTickets">Buscar</label>
+                        <input type="search" id="filtroTickets" placeholder="Ej. TK-0001, creado, impresora">
+                    </div>
+
+                    <div class="table-wrap">
+                        <table>
+                            <thead>
+                                <tr>
+                                    <th>Código</th>
+                                    <th>Descripción</th>
+                                    <th>Estado</th>
+                                    <th>Solicitante</th>
+                                    <th>Acciones</th>
+                                </tr>
+                            </thead>
+                            <tbody id="tablaTickets"></tbody>
+                        </table>
+                    </div>
+                </article>
+            </section>
+        </main>
+    </div>
+
+    <script src="js/api.js"></script>
+    <script src="js/tickets.js"></script>
+</body>
+</html>

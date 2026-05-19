@@ -6,12 +6,16 @@ import org.glassfish.jersey.server.ResourceConfig;
 
 public class AplicacionConfig extends ResourceConfig {
 
-	 public AplicacionConfig() {
+    public AplicacionConfig() {
 
-	        packages("com.tickets.recurso");
+        DatabaseManager.inicializarBaseDatos();
 
-	        register(JacksonFeature.class);
-	        register(MultiPartFeature.class);
-	        DatabaseInitializer.inicializar();
-	    }
+        DatabaseInitializer.inicializar();
+
+        packages("com.tickets.recursos");
+
+        register(JacksonFeature.class);
+
+        register(MultiPartFeature.class);
+    }
 }

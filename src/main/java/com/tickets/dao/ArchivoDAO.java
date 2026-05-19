@@ -1,13 +1,13 @@
 package com.tickets.dao;
 
-import com.tickets.modelo.Archivo;
-import com.tickets.util.ConexionDB;
-
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.util.ArrayList;
 import java.util.List;
+
+import com.tickets.modelo.Archivo;
+import com.tickets.util.ConexionDB;
 
 public class ArchivoDAO {
 

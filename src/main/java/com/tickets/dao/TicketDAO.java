@@ -1,9 +1,5 @@
 package com.tickets.dao;
 
-import com.tickets.modelo.Ticket;
-import com.tickets.modelo.EstadoTicket;
-import com.tickets.util.ConexionDB;
-
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -11,6 +7,10 @@ import java.sql.Statement;
 import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.List;
+
+import com.tickets.modelo.EstadoTicket;
+import com.tickets.modelo.Ticket;
+import com.tickets.util.ConexionDB;
 
 public class TicketDAO {
 
@@ -49,6 +49,26 @@ public class TicketDAO {
         }
 
         return 0;
+    }
+
+    public void actualizarCodigo(int id, String codigo) throws Exception {
+
+        String sql = """
+                UPDATE tickets
+                SET codigo = ?
+                WHERE id = ?
+                """;
+
+        try (
+                Connection con = ConexionDB.obtenerConexion();
+                PreparedStatement ps = con.prepareStatement(sql)
+        ) {
+
+            ps.setString(1, codigo);
+            ps.setInt(2, id);
+
+            ps.executeUpdate();
+        }
     }
 
     public Ticket buscarPorId(int id) throws Exception {
@@ -154,6 +174,21 @@ public class TicketDAO {
 
             ps.setString(1, estado.name()); // Enum → String
             ps.setInt(2, id);
+
+            ps.executeUpdate();
+        }
+    }
+
+    public void eliminar(int id) throws Exception {
+
+        String sql = "DELETE FROM tickets WHERE id = ?";
+
+        try (
+                Connection con = ConexionDB.obtenerConexion();
+                PreparedStatement ps = con.prepareStatement(sql)
+        ) {
+
+            ps.setInt(1, id);
 
             ps.executeUpdate();
         }

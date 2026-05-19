@@ -15,7 +15,7 @@ public class ScriptsSQL {
 		    CHECK (rol IN ('SOLICITANTE', 'SOPORTE'))
 		)
 	""";
-	
+
 	public static final String TABLA_TICKETS = """
 		CREATE TABLE IF NOT EXISTS tickets (
 		    id SERIAL PRIMARY KEY,
@@ -45,7 +45,7 @@ public class ScriptsSQL {
 		    )
 		)
 	""";
-			
+
 	public static final String TABLA_TICKET_ADJUNTOS = """
 		CREATE TABLE IF NOT EXISTS ticket_adjuntos (
 		    id SERIAL PRIMARY KEY,
@@ -61,9 +61,8 @@ public class ScriptsSQL {
 		        REFERENCES tickets(id)
 		        ON DELETE CASCADE
 		)
-
 	""";
-		
+
 	public static final String TABLA_TICKET_TIMELINE = """
 		CREATE TABLE IF NOT EXISTS ticket_timeline (
 		    id SERIAL PRIMARY KEY,

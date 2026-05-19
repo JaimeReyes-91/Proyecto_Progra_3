@@ -1,11 +1,11 @@
 package com.tickets.servicio;
 
-import com.tickets.dao.TicketDAO;
-import com.tickets.modelo.Ticket;
-import com.tickets.modelo.EstadoTicket;
-import com.tickets.util.CodigoTicketUtil;
-
 import java.util.List;
+
+import com.tickets.dao.TicketDAO;
+import com.tickets.modelo.EstadoTicket;
+import com.tickets.modelo.Ticket;
+import com.tickets.util.CodigoTicketUtil;
 
 public class TicketServicio {
 
@@ -13,24 +13,27 @@ public class TicketServicio {
 
     public Ticket crear(String descripcion, int creadoPor) throws Exception {
 
-     
+
         if (descripcion == null || descripcion.trim().isEmpty()) {
             throw new Exception("La descripción no puede estar vacía");
         }
 
-       
+
         Ticket ticket = new Ticket();
         ticket.setDescripcion(descripcion);
         ticket.setCreadoPor(creadoPor);
         ticket.setEstadoActual(EstadoTicket.CREADO);
+        ticket.setCodigo("TMP-" + System.nanoTime());
 
-        
+
         int idGenerado = ticketDAO.crear(ticket);
 
-       
+
         String codigo = CodigoTicketUtil.generarCodigo(idGenerado);
 
-       
+        ticketDAO.actualizarCodigo(idGenerado, codigo);
+
+
         ticket.setId(idGenerado);
         ticket.setCodigo(codigo);
 
@@ -54,18 +57,29 @@ public class TicketServicio {
 
     public void cambiarEstado(int id, EstadoTicket nuevoEstado) throws Exception {
 
-       
+
         Ticket ticket = ticketDAO.buscarPorId(id);
 
         if (ticket == null) {
             throw new Exception("Ticket no encontrado con id: " + id);
         }
 
-        
+
         validarCambioEstado(ticket.getEstadoActual(), nuevoEstado);
 
-     
+
         ticketDAO.actualizarEstado(id, nuevoEstado);
+    }
+
+    public void eliminar(int id) throws Exception {
+
+        Ticket ticket = ticketDAO.buscarPorId(id);
+
+        if (ticket == null) {
+            throw new Exception("Ticket no encontrado con id: " + id);
+        }
+
+        ticketDAO.eliminar(id);
     }
 
     private void validarCambioEstado(EstadoTicket actual, EstadoTicket nuevo) throws Exception {
@@ -75,8 +89,8 @@ public class TicketServicio {
             case ASIGNADO   -> nuevo == EstadoTicket.VALIDACION || nuevo == EstadoTicket.RECHAZADO;
             case VALIDACION -> nuevo == EstadoTicket.FINALIZADO || nuevo == EstadoTicket.DEVUELTO;
             case DEVUELTO   -> nuevo == EstadoTicket.ASIGNADO;
-            case FINALIZADO -> false; 
-            case RECHAZADO  -> false; 
+            case FINALIZADO -> false;
+            case RECHAZADO  -> false;
         };
 
         if (!permitido) {

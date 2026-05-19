@@ -1,0 +1,119 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Usuarios | Sistema de Tickets</title>
+    <link rel="stylesheet" href="css/global.css">
+    <link rel="stylesheet" href="css/usuarios.css">
+</head>
+<body>
+    <div class="app-shell">
+        <aside class="sidebar">
+            <div class="brand">
+                <strong>Tickets</strong>
+                <span>Soporte interno</span>
+            </div>
+            <nav>
+                <a class="nav-link" href="dashboard.html">Dashboard</a>
+                <a class="nav-link" href="tickets.html">Tickets</a>
+                <a class="nav-link active" href="usuarios.html">Usuarios</a>
+                <a class="nav-link" href="#" id="logoutLink">Salir</a>
+            </nav>
+        </aside>
+
+        <main class="main">
+            <header class="topbar">
+                <div>
+                    <h1>Gestión de usuarios</h1>
+                    <p>Administra solicitantes y personal de soporte.</p>
+                </div>
+                <div class="user-chip" id="usuarioActivo">Sesión activa</div>
+            </header>
+
+            <section class="grid two">
+                <article class="card">
+                    <div class="card-header">
+                        <div>
+                            <h2 id="tituloFormulario">Crear usuario</h2>
+                            <p>Los usuarios podrán iniciar sesión con el correo y contraseña registrados.</p>
+                        </div>
+                    </div>
+
+                    <form id="usuarioForm" class="form-grid">
+                        <input type="hidden" id="usuarioId">
+
+                        <div class="field">
+                            <label for="nombre">Nombre</label>
+                            <input type="text" id="nombre" required>
+                        </div>
+
+                        <div class="field">
+                            <label for="correo">Correo</label>
+                            <input type="email" id="correo" required>
+                        </div>
+
+                        <div class="field">
+                            <label for="departamento">Departamento</label>
+                            <input type="text" id="departamento">
+                        </div>
+
+                        <div class="field">
+                            <label for="rol">Rol</label>
+                            <select id="rol" required>
+                                <option value="SOLICITANTE">Solicitante</option>
+                                <option value="SOPORTE">Soporte</option>
+                            </select>
+                        </div>
+
+                        <div class="field">
+                            <label for="contrasena">Contraseña</label>
+                            <input type="password" id="contrasena" required>
+                        </div>
+
+                        <div class="actions">
+                            <button class="btn" type="submit">Guardar</button>
+                            <button class="btn secondary" type="button" id="cancelarEdicion">Cancelar</button>
+                        </div>
+                    </form>
+
+                    <p id="mensaje" class="message"></p>
+                </article>
+
+                <article class="card">
+                    <div class="card-header">
+                        <div>
+                            <h2>Lista de usuarios</h2>
+                            <p>Consulta, edita o elimina cuentas del sistema.</p>
+                        </div>
+                    </div>
+
+                    <div class="field">
+                        <label for="filtroUsuarios">Buscar</label>
+                        <input type="search" id="filtroUsuarios" placeholder="Nombre, correo, rol o departamento">
+                    </div>
+
+                    <div class="table-wrap">
+                        <table>
+                            <thead>
+                                <tr>
+                                    <th>ID</th>
+                                    <th>Nombre</th>
+                                    <th>Correo</th>
+                                    <th>Departamento</th>
+                                    <th>Rol</th>
+                                    <th>Acciones</th>
+                                </tr>
+                            </thead>
+                            <tbody id="tablaUsuarios"></tbody>
+                        </table>
+                    </div>
+                </article>
+            </section>
+        </main>
+    </div>
+
+    <script src="js/api.js"></script>
+    <script src="js/usuarios.js"></script>
+</body>
+</html>

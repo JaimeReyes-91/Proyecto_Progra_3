@@ -1,13 +1,14 @@
 package com.tickets.dao;
 
-import com.tickets.util.ConexionDB;
-import com.tickets.modelo.LineaTiempoEvento;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
 
+import com.tickets.modelo.LineaTiempoEvento;
+import com.tickets.util.ConexionDB;
+
 public class TimeLineDAO {
-	
+
 	public void registrar(LineaTiempoEvento timeline)
 		{
 		String sql = """
@@ -19,7 +20,7 @@ public class TimeLineDAO {
                 )
                 VALUES (?, ?, ?, ?)
                 """;
-		
+
 		try (Connection con = ConexionDB.obtenerConexion();
                 PreparedStatement ps = con.prepareStatement(sql)) {
 
@@ -32,7 +33,7 @@ public class TimeLineDAO {
         }catch (SQLException e) {
         	e.printStackTrace();
         }
-		
+
     }
 }
 

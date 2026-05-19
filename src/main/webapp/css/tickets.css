@@ -1,0 +1,26 @@
+.ticket-actions {
+
+    display: flex;
+
+    gap: 10px;
+}
+
+.btn-delete {
+
+    background: #dc3545;
+}
+
+.btn-delete:hover {
+
+    background: #b52b38;
+}
+
+.btn-finalizar {
+
+    background: #28a745;
+}
+
+.btn-finalizar:hover {
+
+    background: #1f7d35;
+}

@@ -10,7 +10,7 @@ public class TimeLineResponseDTO {
     private String estado;
     private String observacion;
     private LocalDateTime fechaEvento;
-    
+
     public TimeLineResponseDTO() {}
 
 	public TimeLineResponseDTO(int id, int ticketId, String actor, String estado, String observacion,
@@ -46,6 +46,6 @@ public class TimeLineResponseDTO {
 	public LocalDateTime getFechaEvento() {
 		return fechaEvento;
 	}
-    
-    
+
+
 }
