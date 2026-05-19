@@ -61,7 +61,7 @@ public class TicketServicio {
     }
 
     public void cambiarEstado(int id, EstadoTicket nuevoEstado, int actorId,
-            String observacion) throws Exception {
+            String observacion, int AsignadoA) throws Exception {
 
        
         Ticket ticket = ticketDAO.buscarPorId(id);
@@ -72,7 +72,7 @@ public class TicketServicio {
 
         
         validarCambioEstado(ticket.getEstadoActual(), nuevoEstado);
-        ticketDAO.actualizarEstado(id, nuevoEstado);
+        ticketDAO.actualizarEstado(id, nuevoEstado, AsignadoA);
         
         
         timelineServicio.registrarEvento(

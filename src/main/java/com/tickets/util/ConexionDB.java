@@ -6,9 +6,9 @@ import java.sql.SQLException;
 
 public class ConexionDB {
     
-    private static final String URL = "jdbc:postgresql://localhost:5432/gestor_tareas";
+    private static final String URL = "jdbc:postgresql://localhost:5432/apirest_db";
     private static final String USER = "postgres";
-    private static final String PASSWORD = "umg"; 
+    private static final String PASSWORD = "1234"; 
  
     
     public static Connection obtenerConexion() throws SQLException {

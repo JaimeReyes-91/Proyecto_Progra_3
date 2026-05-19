@@ -140,11 +140,12 @@ public class TicketDAO {
         return lista;
     }
 
-    public void actualizarEstado(int id, EstadoTicket estado) throws Exception {
+    public void actualizarEstado(int id, EstadoTicket estado, int AsignadoA) throws Exception {
 
         String sql = """
                 UPDATE tickets
-                SET estado_actual = ?
+                SET estado_actual = ?,
+                asignado_a = ?,
                 WHERE id = ?
                 """;
 
@@ -153,8 +154,9 @@ public class TicketDAO {
                 PreparedStatement ps = con.prepareStatement(sql)
         ) {
 
-            ps.setString(1, estado.name()); // Enum → String
-            ps.setInt(2, id);
+            ps.setString(1, estado.name()); // Enum a String
+            ps.setInt(2, AsignadoA);
+            ps.setInt(3, id);
             
             
 

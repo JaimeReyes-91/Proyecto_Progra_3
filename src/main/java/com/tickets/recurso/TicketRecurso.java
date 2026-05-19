@@ -105,7 +105,9 @@ public class TicketRecurso {
 	            ticketServicio.cambiarEstado(id, 
 	            		ticket.getEstadoActual(),
 	            		ticket.getCreadoPor(),
-	                    ticket.getDescripcion());
+	                    ticket.getDescripcion(),
+	            		ticket.getAsignadoA());
+	            		
 	            
 	            return Response.ok("Estado actualizado correctamente").build();
 	            
