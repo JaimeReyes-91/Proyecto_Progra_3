@@ -1,8 +1,11 @@
 package com.tickets.servicio;
 
 import com.tickets.dao.TicketDAO;
+import com.tickets.dao.TimeLineDAO;
+import com.tickets.servicio.TimeLineServicio;
 import com.tickets.modelo.Ticket;
 import com.tickets.modelo.EstadoTicket;
+import com.tickets.modelo.LineaTiempoEvento;
 import com.tickets.util.CodigoTicketUtil;
 
 import java.util.List;
@@ -10,6 +13,8 @@ import java.util.List;
 public class TicketServicio {
 
     private TicketDAO ticketDAO = new TicketDAO();
+    private TimeLineServicio timelineServicio = new TimeLineServicio();
+
 
     public Ticket crear(String descripcion, int creadoPor) throws Exception {
 
@@ -18,21 +23,24 @@ public class TicketServicio {
             throw new Exception("La descripción no puede estar vacía");
         }
 
-       
+        int idGenerado = ticketDAO.obtenerSiguienteId();
+        String codigo = CodigoTicketUtil.generarCodigo(idGenerado);
+        
         Ticket ticket = new Ticket();
+        ticket.setId(idGenerado);
+        ticket.setCodigo(codigo);
         ticket.setDescripcion(descripcion);
         ticket.setCreadoPor(creadoPor);
         ticket.setEstadoActual(EstadoTicket.CREADO);
 
-        
-        int idGenerado = ticketDAO.crear(ticket);
+        ticketDAO.crear(ticket);
 
-       
-        String codigo = CodigoTicketUtil.generarCodigo(idGenerado);
-
-       
-        ticket.setId(idGenerado);
-        ticket.setCodigo(codigo);
+        timelineServicio.registrarEvento(
+                idGenerado,
+                creadoPor,
+                EstadoTicket.CREADO.name(),
+                "Ticket creado"
+        );
 
         return ticket;
     }
@@ -52,7 +60,8 @@ public class TicketServicio {
         return ticketDAO.listar();
     }
 
-    public void cambiarEstado(int id, EstadoTicket nuevoEstado) throws Exception {
+    public void cambiarEstado(int id, EstadoTicket nuevoEstado, int actorId,
+            String observacion) throws Exception {
 
        
         Ticket ticket = ticketDAO.buscarPorId(id);
@@ -63,10 +72,18 @@ public class TicketServicio {
 
         
         validarCambioEstado(ticket.getEstadoActual(), nuevoEstado);
-
-     
         ticketDAO.actualizarEstado(id, nuevoEstado);
+        
+        
+        timelineServicio.registrarEvento(
+        		id,
+        		actorId,
+        		nuevoEstado.name(),
+        		observacion
+        );
     }
+    
+    
 
     private void validarCambioEstado(EstadoTicket actual, EstadoTicket nuevo) throws Exception {
 

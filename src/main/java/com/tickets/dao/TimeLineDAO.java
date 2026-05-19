@@ -8,7 +8,7 @@ import java.sql.SQLException;
 
 public class TimeLineDAO {
 	
-	public void registrar(LineaTiempoEvento timeline)
+	public void registrar(LineaTiempoEvento timeline) throws Exception
 		{
 		String sql = """
                 INSERT INTO ticket_timeline(
