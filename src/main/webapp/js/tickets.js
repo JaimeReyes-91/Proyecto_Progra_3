@@ -144,8 +144,10 @@ async function crearTicket(event) {
 }
 
 async function cambiarEstado(id, estado) {
+    const actorId = localStorage.getItem("usuarioId");
     try {
-        const response = await fetch(`${API_URL}/tickets/${id}/${estado}`, {
+
+        const response = await fetch(`${API_URL}/tickets/${id}/${estado}/${actorId}`, {
             method: "PUT"
         });
 
@@ -161,6 +163,7 @@ async function cambiarEstado(id, estado) {
         mostrarMensaje(error.message, "error");
     }
 }
+
 
 async function eliminarTicket(id) {
     if (!confirm("¿Eliminar este ticket?")) {

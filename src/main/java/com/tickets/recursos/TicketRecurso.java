@@ -5,6 +5,8 @@ import java.util.Map;
 import com.tickets.modelo.EstadoTicket;
 import com.tickets.modelo.Ticket;
 import com.tickets.servicio.TicketServicio;
+import com.tickets.modelo.LineaTiempoEvento;
+import com.tickets.dao.TimeLineDAO;
 
 import jakarta.ws.rs.Consumes;
 import jakarta.ws.rs.DELETE;
@@ -24,6 +26,8 @@ public class TicketRecurso {
 
     private final TicketServicio ticketServicio =
             new TicketServicio();
+
+        private TimeLineDAO timeLineDAO = new TimeLineDAO();
 
     @GET
     public Response listar() {
@@ -104,21 +108,34 @@ public class TicketRecurso {
     }
 
     @PUT
-    @Path("/{id}/{estado}")
+    @Path("/{id}/{estado}/{actorId}")
     public Response cambiarEstado(
             @PathParam("id")
             int id,
 
             @PathParam("estado")
-            String estado
+            String estado,
+
+            @PathParam("actorId")
+            int actorId
     ) {
 
         try {
-
-            ticketServicio.cambiarEstado(
+                EstadoTicket nuevoEstado = EstadoTicket.valueOf(estado);
+                
+                ticketServicio.cambiarEstado(
                     id,
-                    EstadoTicket.valueOf(estado)
+                    nuevoEstado
             );
+
+                LineaTiempoEvento evento = new LineaTiempoEvento(
+                        id,
+                        actorId,
+                        nuevoEstado.name(),
+                        "Estado actualizado a " + nuevoEstado.name()
+                );
+
+                timeLineDAO.registrar(evento);
 
             return Response.ok(
                     Map.of(

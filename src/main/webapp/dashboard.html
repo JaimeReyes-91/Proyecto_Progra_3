@@ -6,6 +6,7 @@
     <title>Dashboard | Sistema de Tickets</title>
     <link rel="stylesheet" href="css/global.css">
     <link rel="stylesheet" href="css/dashboard.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
 </head>
 <body>
     <div class="app-shell">
@@ -31,28 +32,47 @@
                 <div class="user-chip" id="usuarioActivo">Sesión activa</div>
             </header>
 
-            <section class="grid kpis">
-                <article class="kpi">
-                    <span>Total</span>
-                    <strong id="totalTickets">0</strong>
-                </article>
-                <article class="kpi">
-                    <span>Creados</span>
-                    <strong id="ticketsCreados">0</strong>
-                </article>
-                <article class="kpi">
-                    <span>Asignados</span>
-                    <strong id="ticketsAsignados">0</strong>
-                </article>
-                <article class="kpi">
-                    <span>Validación</span>
-                    <strong id="ticketsValidacion">0</strong>
-                </article>
-                <article class="kpi">
-                    <span>Cerrados</span>
-                    <strong id="ticketsCerrados">0</strong>
-                </article>
-            </section>
+<section class="grid kpis">
+    <article class="kpi">
+        <div class="kpi-icon">
+            <i class="fa-solid fa-ticket"></i>
+        </div>
+        <span>Total</span>
+        <strong id="totalTickets">0</strong>
+    </article>
+
+    <article class="kpi">
+        <div class="kpi-icon">
+            <i class="fa-solid fa-circle-plus"></i>
+        </div>
+        <span>Creados</span>
+        <strong id="ticketsCreados">0</strong>
+    </article>
+
+    <article class="kpi">
+        <div class="kpi-icon">
+            <i class="fa-solid fa-user-check"></i>
+        </div>
+        <span>Asignados</span>
+        <strong id="ticketsAsignados">0</strong>
+    </article>
+
+    <article class="kpi">
+        <div class="kpi-icon">
+            <i class="fa-solid fa-clipboard-check"></i>
+        </div>
+        <span>Validación</span>
+        <strong id="ticketsValidacion">0</strong>
+    </article>
+
+    <article class="kpi">
+        <div class="kpi-icon">
+            <i class="fa-solid fa-circle-check"></i>
+        </div>
+        <span>Cerrados</span>
+        <strong id="ticketsCerrados">0</strong>
+    </article>
+</section>
 
             <section class="card">
                 <div class="card-header">

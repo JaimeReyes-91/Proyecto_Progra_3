@@ -13,4 +13,44 @@
     align-items: center;
 
     color: #999;
+    
 }
+.kpi {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    padding: 18px;
+    border-radius: 12px;
+    background: #fff;
+    border: 1px solid #eef0f4;
+    border-left: 4px solid;
+    box-shadow: 0 1px 4px rgba(0,0,0,.05);
+}
+
+.kpi-icon {
+    width: 42px;
+    height: 42px;
+    border-radius: 10px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 18px;
+    line-height: 1;
+    flex-shrink: 0;
+}
+
+.kpi span { font-size: 13px; color: #666; }
+.kpi strong { font-size: 26px; font-weight: 600; color: #111; }
+
+/* Colores por tarjeta */
+.kpi:nth-child(1) { border-left-color: #7c3aed; }
+.kpi:nth-child(2) { border-left-color: #2563eb; }
+.kpi:nth-child(3) { border-left-color: #d97706; }
+.kpi:nth-child(4) { border-left-color: #db2777; }
+.kpi:nth-child(5) { border-left-color: #059669; }
+
+.kpi:nth-child(1) .kpi-icon { background: #ede9fe; color: #7c3aed; }
+.kpi:nth-child(2) .kpi-icon { background: #dbeafe; color: #2563eb; }
+.kpi:nth-child(3) .kpi-icon { background: #fef3c7; color: #d97706; }
+.kpi:nth-child(4) .kpi-icon { background: #fce7f3; color: #db2777; }
+.kpi:nth-child(5) .kpi-icon { background: #d1fae5; color: #059669; }
