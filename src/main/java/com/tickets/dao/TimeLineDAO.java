@@ -8,8 +8,13 @@ import com.tickets.modelo.LineaTiempoEvento;
 import com.tickets.util.ConexionDB;
 
 public class TimeLineDAO {
+<<<<<<< HEAD
 
 	public void registrar(LineaTiempoEvento timeline)
+=======
+	
+	public void registrar(LineaTiempoEvento timeline) throws Exception
+>>>>>>> c605451392086a836a064003b72863b35400bad8
 		{
 		String sql = """
                 INSERT INTO ticket_timeline(

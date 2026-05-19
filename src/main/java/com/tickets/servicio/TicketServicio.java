@@ -1,5 +1,16 @@
 package com.tickets.servicio;
 
+<<<<<<< HEAD
+=======
+import com.tickets.dao.TicketDAO;
+import com.tickets.dao.TimeLineDAO;
+import com.tickets.servicio.TimeLineServicio;
+import com.tickets.modelo.Ticket;
+import com.tickets.modelo.EstadoTicket;
+import com.tickets.modelo.LineaTiempoEvento;
+import com.tickets.util.CodigoTicketUtil;
+
+>>>>>>> c605451392086a836a064003b72863b35400bad8
 import java.util.List;
 
 import com.tickets.dao.TicketDAO;
@@ -10,6 +21,8 @@ import com.tickets.util.CodigoTicketUtil;
 public class TicketServicio {
 
     private TicketDAO ticketDAO = new TicketDAO();
+    private TimeLineServicio timelineServicio = new TimeLineServicio();
+
 
     public Ticket crear(String descripcion, int creadoPor) throws Exception {
 
@@ -18,14 +31,23 @@ public class TicketServicio {
             throw new Exception("La descripción no puede estar vacía");
         }
 
+<<<<<<< HEAD
 
+=======
+        int idGenerado = ticketDAO.obtenerSiguienteId();
+        String codigo = CodigoTicketUtil.generarCodigo(idGenerado);
+        
+>>>>>>> c605451392086a836a064003b72863b35400bad8
         Ticket ticket = new Ticket();
+        ticket.setId(idGenerado);
+        ticket.setCodigo(codigo);
         ticket.setDescripcion(descripcion);
         ticket.setCreadoPor(creadoPor);
         ticket.setEstadoActual(EstadoTicket.CREADO);
         ticket.setCodigo("TMP-" + System.nanoTime());
 
 
+<<<<<<< HEAD
         int idGenerado = ticketDAO.crear(ticket);
 
 
@@ -36,6 +58,16 @@ public class TicketServicio {
 
         ticket.setId(idGenerado);
         ticket.setCodigo(codigo);
+=======
+        ticketDAO.crear(ticket);
+
+        timelineServicio.registrarEvento(
+                idGenerado,
+                creadoPor,
+                EstadoTicket.CREADO.name(),
+                "Ticket creado"
+        );
+>>>>>>> c605451392086a836a064003b72863b35400bad8
 
         return ticket;
     }
@@ -55,7 +87,8 @@ public class TicketServicio {
         return ticketDAO.listar();
     }
 
-    public void cambiarEstado(int id, EstadoTicket nuevoEstado) throws Exception {
+    public void cambiarEstado(int id, EstadoTicket nuevoEstado, int actorId,
+            String observacion, int AsignadoA) throws Exception {
 
 
         Ticket ticket = ticketDAO.buscarPorId(id);
@@ -66,10 +99,24 @@ public class TicketServicio {
 
 
         validarCambioEstado(ticket.getEstadoActual(), nuevoEstado);
+<<<<<<< HEAD
 
 
         ticketDAO.actualizarEstado(id, nuevoEstado);
+=======
+        ticketDAO.actualizarEstado(id, nuevoEstado, AsignadoA);
+        
+        
+        timelineServicio.registrarEvento(
+        		id,
+        		actorId,
+        		nuevoEstado.name(),
+        		observacion
+        );
+>>>>>>> c605451392086a836a064003b72863b35400bad8
     }
+    
+    
 
     public void eliminar(int id) throws Exception {
 
