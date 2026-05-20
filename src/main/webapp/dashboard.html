@@ -10,16 +10,28 @@
 </head>
 <body>
     <div class="app-shell">
-        <aside class="sidebar">
+        <aside class="sidebar" id="sidebar">
             <div class="brand">
-                <strong>Tickets</strong>
-                <span>Soporte interno</span>
+                <strong class="brand-text">Tickets</strong>
+                <button class="toggle-btn" id="toggleSidebar">☰</button>
             </div>
             <nav>
-                <a class="nav-link active" href="dashboard.html">Dashboard</a>
-                <a class="nav-link" href="tickets.html">Tickets</a>
-                <a class="nav-link" id="linkUsuarios" href="usuarios.html">Usuarios</a>
-                <a class="nav-link" href="#" id="logoutLink">Salir</a>
+                <a class="nav-link active" href="dashboard.html">
+                    <span class="nav-icon">📊</span>
+                    <span class="nav-text">Dashboard</span>
+                </a>
+                <a class="nav-link" href="tickets.html">
+                    <span class="nav-icon">🎫</span>
+                    <span class="nav-text">Tickets</span>
+                </a>
+                <a class="nav-link" id="linkUsuarios" href="usuarios.html">
+                    <span class="nav-icon">👥</span>
+                    <span class="nav-text">Usuarios</span>
+                </a>
+                <a class="nav-link" href="#" id="logoutLink">
+                    <span class="nav-icon">🚪</span>
+                    <span class="nav-text">Salir</span>
+                </a>
             </nav>
         </aside>
 
@@ -29,7 +41,13 @@
                     <h1>Panel general</h1>
                     <p>Resumen de actividad y estado actual de los tickets.</p>
                 </div>
-                <div class="user-chip" id="usuarioActivo">Sesión activa</div>
+                <div class="user-chip" id="usuarioActivo">
+                    <div class="avatar" id="usuarioAvatar"></div>
+                    <div class="info">
+                        <div class="nombre" id="usuarioNombre"></div>
+                        <div class="rol" id="usuarioRol"></div>
+                    </div>
+                </div>
             </header>
 
 <section class="grid kpis">

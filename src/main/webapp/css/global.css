@@ -46,7 +46,7 @@ button {
 
 .app-shell {
     display: grid;
-    grid-template-columns: 240px minmax(0, 1fr);
+    grid-template-columns: auto minmax(0, 1fr);
     min-height: 100vh;
 }
 
@@ -57,31 +57,85 @@ button {
     position: sticky;
     top: 0;
     height: 100vh;
+    width: 240px;
+    transition: width .3s;
+    overflow: hidden;
+}
+
+.sidebar.collapsed {
+    width: 60px;
 }
 
 .brand {
     border-bottom: 1px solid rgba(255, 255, 255, 0.16);
     padding-bottom: 18px;
     margin-bottom: 18px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
 }
 
-.brand strong {
-    display: block;
-    font-size: 20px;
-    margin-bottom: 4px;
+
+.brand-text {
+    transition: opacity .2s;
+    white-space: nowrap;
 }
 
-.brand span {
-    color: #bfd2df;
-    font-size: 13px;
+.sidebar.collapsed {
+    width: 56px;
+    padding: 22px 10px; 
+}
+
+.sidebar.collapsed .nav-link {
+    justify-content: center; /* ← centra el icono */
+    padding: 12px 8px;
+}
+
+.sidebar.collapsed .brand-text {
+    opacity: 0;
+    width: 0;
+}
+
+.toggle-btn {
+    background: rgba(255,255,255,.15);
+    border: none;
+    color: #fff;
+    border-radius: 6px;
+    width: 32px;   
+    height: 32px; 
+    cursor: pointer;
+    font-size: 16px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+    min-width: 32px;
 }
 
 .nav-link {
-    display: block;
+    display: flex;
+    align-items: center;
+    gap: 10px;
     color: #e7f0f7;
     border-radius: 8px;
     padding: 12px 14px;
     margin-bottom: 8px;
+}
+
+.nav-icon {
+    flex-shrink: 0;
+    font-size: 16px;
+}
+
+.nav-text {
+    white-space: nowrap;
+    transition: opacity .2s;
+}
+
+.sidebar.collapsed .nav-text {
+    opacity: 0;
+    width: 0;
+    overflow: hidden;
 }
 
 .nav-link:hover,
@@ -118,13 +172,36 @@ button {
     margin-top: 4px;
 }
 
+    
 .user-chip {
-    background: var(--surface-soft);
-    border: 1px solid var(--line);
-    border-radius: 999px;
-    color: var(--text);
-    padding: 8px 12px;
-    white-space: nowrap;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.user-chip .avatar {
+    width: 36px;
+    height: 36px;
+    border-radius: 50%;
+    background: #ede9fe;
+    color: #7c3aed;
+    font-size: 13px;
+    font-weight: 600;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.user-chip .info .nombre {
+    font-size: 14px;
+    font-weight: 500;
+    color: #111;
+    line-height: 1.2;
+}
+
+.user-chip .info .rol {
+    font-size: 11px;
+    color: #888;
 }
 
 .grid {

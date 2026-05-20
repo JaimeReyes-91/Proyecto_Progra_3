@@ -13,8 +13,8 @@
     align-items: center;
 
     color: #999;
-    
 }
+
 .kpi {
     display: flex;
     flex-direction: column;
@@ -54,3 +54,4 @@
 .kpi:nth-child(3) .kpi-icon { background: #fef3c7; color: #d97706; }
 .kpi:nth-child(4) .kpi-icon { background: #fce7f3; color: #db2777; }
 .kpi:nth-child(5) .kpi-icon { background: #d1fae5; color: #059669; }
+
