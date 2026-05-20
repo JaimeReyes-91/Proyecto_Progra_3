@@ -2,11 +2,11 @@ package com.tickets.recursos;
 
 import java.util.Map;
 
+import com.tickets.dao.TimeLineDAO;
 import com.tickets.modelo.EstadoTicket;
+import com.tickets.modelo.LineaTiempoEvento;
 import com.tickets.modelo.Ticket;
 import com.tickets.servicio.TicketServicio;
-import com.tickets.modelo.LineaTiempoEvento;
-import com.tickets.dao.TimeLineDAO;
 
 import jakarta.ws.rs.Consumes;
 import jakarta.ws.rs.DELETE;
@@ -122,7 +122,7 @@ public class TicketRecurso {
 
         try {
                 EstadoTicket nuevoEstado = EstadoTicket.valueOf(estado);
-                
+
                 ticketServicio.cambiarEstado(
                     id,
                     nuevoEstado
