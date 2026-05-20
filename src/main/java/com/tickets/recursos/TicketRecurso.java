@@ -6,9 +6,7 @@ import java.util.Map;
 import org.glassfish.jersey.media.multipart.FormDataParam;
 import org.glassfish.jersey.media.multipart.FormDataContentDisposition;
 
-import com.tickets.dao.TimeLineDAO;
 import com.tickets.modelo.EstadoTicket;
-import com.tickets.modelo.LineaTiempoEvento;
 import com.tickets.modelo.Ticket;
 import com.tickets.servicio.ArchivoServicio;
 import com.tickets.servicio.TicketServicio;
@@ -33,7 +31,6 @@ public class TicketRecurso {
     
     private final ArchivoServicio archivoServicio = new ArchivoServicio();
 
-        private TimeLineDAO timeLineDAO = new TimeLineDAO();
 
     @GET
     public Response listar() {
