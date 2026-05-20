@@ -1,4 +1,11 @@
-package com.tickets.recurso;
+package com.tickets.recursos;
+
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.InputStream;
+
+import org.glassfish.jersey.media.multipart.FormDataContentDisposition;
+import org.glassfish.jersey.media.multipart.FormDataParam;
 
 import com.tickets.modelo.Archivo;
 import com.tickets.servicio.ArchivoServicio;
@@ -11,13 +18,6 @@ import jakarta.ws.rs.PathParam;
 import jakarta.ws.rs.Produces;
 import jakarta.ws.rs.core.MediaType;
 import jakarta.ws.rs.core.Response;
-
-import org.glassfish.jersey.media.multipart.FormDataContentDisposition;
-import org.glassfish.jersey.media.multipart.FormDataParam;
-
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.InputStream;
 
 @Path("/archivos")
 public class ArchivoRecurso {

@@ -1,4 +1,4 @@
-package com.tickets.recurso;
+package com.tickets.recursos;
 
 public class TimeLineRecurso {
 

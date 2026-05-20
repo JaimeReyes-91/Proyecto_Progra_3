@@ -1,27 +1,31 @@
 package com.tickets.dao;
 
-import com.tickets.util.ConexionDB;
-import com.tickets.modelo.LineaTiempoEvento;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
-import java.sql.SQLException;
+
+import com.tickets.modelo.LineaTiempoEvento;
+import com.tickets.util.ConexionDB;
 
 public class TimeLineDAO {
-	
-	public void registrar(LineaTiempoEvento timeline) throws Exception
-		{
-		String sql = """
+
+    public void registrar(
+            LineaTiempoEvento timeline
+    ) throws Exception {
+
+        String sql = """
                 INSERT INTO ticket_timeline(
-                ticket_id,
-                actor_id,
-                estado,
-                observacion
+                    ticket_id,
+                    actor_id,
+                    estado,
+                    observacion
                 )
                 VALUES (?, ?, ?, ?)
                 """;
-		
-		try (Connection con = ConexionDB.obtenerConexion();
-                PreparedStatement ps = con.prepareStatement(sql)) {
+
+        try (
+                Connection con = ConexionDB.obtenerConexion();
+                PreparedStatement ps = con.prepareStatement(sql)
+        ) {
 
             ps.setInt(1, timeline.getTicketId());
             ps.setInt(2, timeline.getActorId());
@@ -29,10 +33,6 @@ public class TimeLineDAO {
             ps.setString(4, timeline.getObservacion());
 
             ps.executeUpdate();
-        }catch (SQLException e) {
-        	e.printStackTrace();
         }
-		
     }
 }
-

@@ -1,14 +1,8 @@
 package com.tickets.recurso;
 
-import java.io.File;
-import java.io.FileInputStream;
-import com.tickets.modelo.Archivo;
 import com.tickets.modelo.Ticket;
 import com.tickets.servicio.TicketServicio;
-import com.tickets.servicio.TimeLineServicio;
 
-
-import jakarta.ws.rs.Consumes;
 import jakarta.ws.rs.GET;
 import jakarta.ws.rs.POST;
 import jakarta.ws.rs.PUT;
@@ -22,12 +16,12 @@ import jakarta.ws.rs.core.Response;
 @Path("/tickets")
 
 public class TicketRecurso {
-	
+
 	private final TicketServicio ticketServicio =
             new TicketServicio();
-	
 
-	
+
+
 	 @GET
 	    public Response listarTickets() {
 
@@ -44,7 +38,7 @@ public class TicketRecurso {
 	                    .build();
 	        }
 	    }
-	 
+
 	 @GET @Path("/{id}")
 	    @Produces(MediaType.APPLICATION_JSON)
 	    public Response obtenerPorId(@PathParam("id") int id) {
@@ -58,7 +52,7 @@ public class TicketRecurso {
 	                        .entity("Ticket no encontrado")
 	                        .build();
 	            }
-	            
+
 	            return Response.ok(ticket)
 	            		.build();
 
@@ -69,7 +63,7 @@ public class TicketRecurso {
 	                    .build();
 	        }
 	    }
-	 
+
 
 	    @POST
 	    public Response crearTicket(Ticket ticket) {
@@ -91,9 +85,9 @@ public class TicketRecurso {
 	                    .entity(e.getMessage())
 	                    .build();
 	        }
-	        
+
 	    }
-	    
+
 	 // PUT /api/tickets/{id}/estado
 	    @PUT
 	    @Path("/{id}/estado")
@@ -102,15 +96,15 @@ public class TicketRecurso {
 	            Ticket ticket
 	    ) {
 	        try {
-	            ticketServicio.cambiarEstado(id, 
+	            ticketServicio.cambiarEstado(id,
 	            		ticket.getEstadoActual(),
 	            		ticket.getCreadoPor(),
 	                    ticket.getDescripcion(),
 	            		ticket.getAsignadoA());
-	            		
-	            
+
+
 	            return Response.ok("Estado actualizado correctamente").build();
-	            
+
 	        } catch (Exception e) {
 	            return Response
 	                    .status(Response.Status.BAD_REQUEST)
@@ -118,7 +112,7 @@ public class TicketRecurso {
 	                    .build();
 	        }
 	    }
-	    
+
 	   /* @PUT @Path("/{id}/estado")
 	    @Consumes(MediaType.APPLICATION_JSON)
 	    @Produces(MediaType.APPLICATION_JSON)

@@ -10,7 +10,7 @@ public class Archivo {
 	private String mimeType;
 	private long tamano;
 	private LocalDateTime fechaSubida;
-	
+
 	public Archivo(int id, int ticketId, String nombreOriginal, String nombreGuardado, String rutaArchivo,
 			String mimeType, long tamano, LocalDateTime fechaSubida) {
 		super();
@@ -23,9 +23,9 @@ public class Archivo {
 		this.tamano = tamano;
 		this.fechaSubida = fechaSubida;
 	}
-	
+
 	public Archivo() {
-		
+
 	}
 
 	public int getId() {
@@ -91,7 +91,7 @@ public class Archivo {
 	public void setFechaSubida(LocalDateTime fechaSubida) {
 		this.fechaSubida = fechaSubida;
 	}
-	
-	
-	
+
+
+
 }
