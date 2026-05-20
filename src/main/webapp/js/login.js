@@ -1,13 +1,23 @@
 document.addEventListener("DOMContentLoaded", () => {
     const form = document.getElementById("loginForm");
+	const usuarioId = localStorage.getItem("usuarioId");
 
-    if (localStorage.getItem("usuarioId")) {
-        window.location.href = "dashboard.html";
-        return;
+	if (usuarioId) {
+
+	        const irDashboard = confirm(
+	            "Ya existe una sesión iniciada. ¿Desea ir al dashboard?"
+	        );
+
+	        if (irDashboard) {
+
+	            window.location.href = "dashboard.html";
+	            return;
+
+	        }
     }
 
     form.addEventListener("submit", login);
-});
+	});
 
 async function login(event) {
     event.preventDefault();
