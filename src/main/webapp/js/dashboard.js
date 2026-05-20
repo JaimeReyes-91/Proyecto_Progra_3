@@ -1,3 +1,14 @@
+let ticketsData = [];
+
+const transiciones = {
+    CREADO: ["ASIGNADO", "RECHAZADO"],
+    ASIGNADO: ["VALIDACION", "RECHAZADO"],
+    VALIDACION: ["FINALIZADO", "DEVUELTO"],
+    DEVUELTO: ["ASIGNADO"],
+    FINALIZADO: [],
+    RECHAZADO: []
+};
+
 document.addEventListener("DOMContentLoaded", () => {
     protegerSesion();
     prepararNavegacion();
@@ -23,8 +34,9 @@ function prepararNavegacion() {
     document.getElementById("usuarioRol").textContent = rol;
 
     document.getElementById("toggleSidebar").addEventListener("click", () => {
-    document.getElementById("sidebar").classList.toggle("collapsed");
+        document.getElementById("sidebar").classList.toggle("collapsed");
     });
+
     if (rol !== "SOPORTE" && linkUsuarios) {
         linkUsuarios.style.display = "none";
     }
@@ -36,14 +48,12 @@ async function cargarDashboard() {
     try {
         const response = await fetch(API_URL + "/tickets");
 
-        if (!response.ok) {
-            throw new Error("No se pudieron cargar los tickets");
-        }
+        if (!response.ok) throw new Error("No se pudieron cargar los tickets");
 
-        const tickets = await response.json();
+        ticketsData = await response.json();
 
-        mostrarResumen(tickets);
-        mostrarRecientes(tickets.slice(0, 8));
+        mostrarResumen(ticketsData);
+        mostrarRecientes(ticketsData.slice(0, 8));
     } catch (error) {
         console.error(error);
         mostrarRecientes([]);
@@ -69,7 +79,7 @@ function mostrarRecientes(tickets) {
     const tabla = document.getElementById("tablaRecientes");
 
     if (!tickets.length) {
-        tabla.innerHTML = `<tr><td class="empty" colspan="4">No hay tickets para mostrar.</td></tr>`;
+        tabla.innerHTML = `<tr><td class="empty" colspan="5">No hay tickets para mostrar.</td></tr>`;
         return;
     }
 
@@ -79,8 +89,57 @@ function mostrarRecientes(tickets) {
             <td>${escapar(ticket.descripcion || "-")}</td>
             <td><span class="badge ${ticket.estadoActual}">${formatearEstado(ticket.estadoActual)}</span></td>
             <td>${ticket.creadoPor || "-"}</td>
+			<td>
+			                <button class="btn small secondary" onclick="verTimeline(${ticket.id}, '${escapar(ticket.codigo)}')">
+			                    🕓 Timeline
+			                </button>
+			            </td>
         </tr>
     `).join("");
+}
+
+
+async function verTimeline(ticketId, codigo) {
+    try {
+        const response = await fetch(`${API_URL}/timeline/${ticketId}`);
+
+        if (!response.ok) throw new Error("No se pudo cargar el timeline");
+
+        const eventos = await response.json();
+
+        document.getElementById("modalTitulo").textContent = `Timeline — ${codigo}`;
+
+        document.getElementById("modalContenido").innerHTML = eventos.length
+            ? eventos.map(e => `
+                <div class="timeline-item">
+                    <div class="timeline-dot ${e.estado}"></div>
+                    <div class="timeline-info">
+                        <span class="timeline-fecha">${formatearFecha(e.fechaEvento)}</span>
+                        <strong class="timeline-estado">${formatearEstado(e.estado)}</strong>
+                        <span class="timeline-obs">${escapar(e.observacion || "Sin observación")}</span>
+                    </div>
+                </div>
+            `).join("")
+            : "<p>No hay eventos registrados.</p>";
+
+        document.getElementById("modalTimeline").style.display = "flex";
+
+    } catch (error) {
+        console.error(error);
+        alert(error.message);
+    }
+}
+
+function formatearFecha(fechaStr) {
+    if (!fechaStr) return "";
+    // viene como "2026-05-19T10:00:00"
+    const [fecha, hora] = fechaStr.split("T");
+    const horaCorta = hora ? hora.substring(0, 5) : "";
+    return `${fecha} ${horaCorta}`;
+}
+
+function cerrarModal() {
+    document.getElementById("modalTimeline").style.display = "none";
 }
 
 function formatearEstado(estado) {

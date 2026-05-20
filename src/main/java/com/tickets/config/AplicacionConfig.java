@@ -4,6 +4,9 @@ import org.glassfish.jersey.jackson.JacksonFeature;
 import org.glassfish.jersey.media.multipart.MultiPartFeature;
 import org.glassfish.jersey.server.ResourceConfig;
 
+import jakarta.ws.rs.ApplicationPath;
+
+@ApplicationPath("/system")
 public class AplicacionConfig extends ResourceConfig {
 
     public AplicacionConfig() {
@@ -17,5 +20,7 @@ public class AplicacionConfig extends ResourceConfig {
         register(JacksonFeature.class);
 
         register(MultiPartFeature.class);
+
+        register(ObjectMapperContextResolver.class); 
     }
 }

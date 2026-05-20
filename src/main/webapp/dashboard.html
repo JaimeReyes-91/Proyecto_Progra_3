@@ -50,47 +50,33 @@
                 </div>
             </header>
 
-<section class="grid kpis">
-    <article class="kpi">
-        <div class="kpi-icon">
-            <i class="fa-solid fa-ticket"></i>
-        </div>
-        <span>Total</span>
-        <strong id="totalTickets">0</strong>
-    </article>
-
-    <article class="kpi">
-        <div class="kpi-icon">
-            <i class="fa-solid fa-circle-plus"></i>
-        </div>
-        <span>Creados</span>
-        <strong id="ticketsCreados">0</strong>
-    </article>
-
-    <article class="kpi">
-        <div class="kpi-icon">
-            <i class="fa-solid fa-user-check"></i>
-        </div>
-        <span>Asignados</span>
-        <strong id="ticketsAsignados">0</strong>
-    </article>
-
-    <article class="kpi">
-        <div class="kpi-icon">
-            <i class="fa-solid fa-clipboard-check"></i>
-        </div>
-        <span>Validación</span>
-        <strong id="ticketsValidacion">0</strong>
-    </article>
-
-    <article class="kpi">
-        <div class="kpi-icon">
-            <i class="fa-solid fa-circle-check"></i>
-        </div>
-        <span>Cerrados</span>
-        <strong id="ticketsCerrados">0</strong>
-    </article>
-</section>
+            <section class="grid kpis">
+                <article class="kpi">
+                    <div class="kpi-icon"><i class="fa-solid fa-ticket"></i></div>
+                    <span>Total</span>
+                    <strong id="totalTickets">0</strong>
+                </article>
+                <article class="kpi">
+                    <div class="kpi-icon"><i class="fa-solid fa-circle-plus"></i></div>
+                    <span>Creados</span>
+                    <strong id="ticketsCreados">0</strong>
+                </article>
+                <article class="kpi">
+                    <div class="kpi-icon"><i class="fa-solid fa-user-check"></i></div>
+                    <span>Asignados</span>
+                    <strong id="ticketsAsignados">0</strong>
+                </article>
+                <article class="kpi">
+                    <div class="kpi-icon"><i class="fa-solid fa-clipboard-check"></i></div>
+                    <span>Validación</span>
+                    <strong id="ticketsValidacion">0</strong>
+                </article>
+                <article class="kpi">
+                    <div class="kpi-icon"><i class="fa-solid fa-circle-check"></i></div>
+                    <span>Cerrados</span>
+                    <strong id="ticketsCerrados">0</strong>
+                </article>
+            </section>
 
             <section class="card">
                 <div class="card-header">
@@ -104,10 +90,11 @@
                     <table>
                         <thead>
                             <tr>
-                                <th>Código</th>
-                                <th>Descripción</th>
-                                <th>Estado</th>
-                                <th>Creado por</th>
+								<th>Código</th>
+								<th>Descripción</th>
+								<th>Estado</th>
+								<th>Creado por</th>
+								<th>Timeline</th>
                             </tr>
                         </thead>
                         <tbody id="tablaRecientes"></tbody>
@@ -115,6 +102,17 @@
                 </div>
             </section>
         </main>
+    </div>
+
+    <!-- Modal Timeline -->
+    <div id="modalTimeline" class="modal-overlay" style="display:none;">
+        <div class="modal-box">
+            <div class="modal-header">
+                <h2 id="modalTitulo">Timeline</h2>
+                <button class="modal-cerrar" onclick="cerrarModal()">✕</button>
+            </div>
+            <div id="modalContenido" class="timeline-lista"></div>
+        </div>
     </div>
 
     <script src="js/api.js"></script>

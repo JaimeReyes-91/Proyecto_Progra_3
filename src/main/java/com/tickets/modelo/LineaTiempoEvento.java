@@ -1,6 +1,6 @@
 package com.tickets.modelo;
 
-import java.time.LocalDateTime;
+//import java.time.LocalDateTime;
 public class LineaTiempoEvento {
 
 	private int id;
@@ -8,7 +8,7 @@ public class LineaTiempoEvento {
 	private int actorId;
 	private String estado;
 	private String observacion;
-	private LocalDateTime fechaEvento;
+	private String fechaEvento;
 
 	public LineaTiempoEvento() {}
 
@@ -60,11 +60,11 @@ public class LineaTiempoEvento {
 		this.observacion = observacion;
 	}
 
-	public LocalDateTime getFechaEvento() {
+	public String getFechaEvento() {
 		return fechaEvento;
 	}
 
-	public void setFechaEvento(LocalDateTime fechaEvento) {
+	public void setFechaEvento(String fechaEvento) {
 		this.fechaEvento = fechaEvento;
 	}
 

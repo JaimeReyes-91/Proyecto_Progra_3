@@ -84,20 +84,25 @@ function renderTickets() {
         return;
     }
 
-    tabla.innerHTML = visibles.map(ticket => `
-        <tr>
-            <td>${escapar(ticket.codigo || "-")}</td>
-            <td>${escapar(ticket.descripcion || "-")}</td>
-            <td><span class="badge ${ticket.estadoActual}">${formatearEstado(ticket.estadoActual)}</span></td>
-            <td>${ticket.creadoPor || "-"}</td>
-            <td>
-                <div class="actions">
-                    ${botonesEstado(ticket)}
-                    <button class="btn small danger" type="button" onclick="eliminarTicket(${ticket.id})">Eliminar</button>
-                </div>
-            </td>
-        </tr>
-    `).join("");
+	tabla.innerHTML = visibles.map(ticket => `
+	    <tr>
+	        <td>${escapar(ticket.codigo || "-")}</td>
+	        <td>${escapar(ticket.descripcion || "-")}</td>
+	        <td><span class="badge ${ticket.estadoActual}">${formatearEstado(ticket.estadoActual)}</span></td>
+	        <td>
+	            ${ticket.creadoPor || "-"}
+	            <button class="btn small secondary" type="button" onclick="verTimeline(${ticket.id}, '${escapar(ticket.codigo)}')">
+	                🕓 Timeline
+	            </button>
+	        </td>
+	        <td>
+	            <div class="actions">
+	                ${botonesEstado(ticket)}
+	                <button class="btn small danger" type="button" onclick="eliminarTicket(${ticket.id})">Eliminar</button>
+	            </div>
+	        </td>
+	    </tr>
+	`).join("");
 }
 
 function botonesEstado(ticket) {
@@ -212,4 +217,37 @@ function cerrarSesion(event) {
     event.preventDefault();
     localStorage.clear();
     window.location.href = "login.html";
+}
+
+async function verTimeline(ticketId, codigo) {
+    try {
+        const response = await fetch(`${API_URL}/timeline/${ticketId}`);
+
+        if (!response.ok) {
+            throw new Error("No se pudo cargar el timeline");
+        }
+
+        const eventos = await response.json();
+
+        
+        const contenido = eventos.length
+            ? eventos.map(e => `
+                <div class="timeline-evento">
+                    <span class="badge ${e.estado}">${formatearEstado(e.estado)}</span>
+                    <span class="timeline-obs">${escapar(e.observacion || "Sin observación")}</span>
+                    <span class="timeline-fecha">${e.fechaEvento || ""}</span>
+                </div>
+            `).join("")
+            : "<p>No hay eventos registrados.</p>";
+
+        
+        const modal = document.getElementById("modalTimeline");
+        document.getElementById("modalTitulo").textContent = `Timeline de ${codigo}`;
+        document.getElementById("modalContenido").innerHTML = contenido;
+        modal.style.display = "flex";
+
+    } catch (error) {
+        console.error(error);
+        mostrarMensaje(error.message, "error");
+    }
 }

@@ -20,6 +20,12 @@
     <dependencies>
     
     <!-- Jersey Servlet -->
+    
+    	<dependency>
+    	<groupId>com.fasterxml.jackson.datatype</groupId>
+    	<artifactId>jackson-datatype-jsr310</artifactId>
+    	<version>2.15.2</version>
+		</dependency>
 		<dependency>
 		    <groupId>org.glassfish.jersey.containers</groupId>
 		    <artifactId>jersey-container-servlet</artifactId>

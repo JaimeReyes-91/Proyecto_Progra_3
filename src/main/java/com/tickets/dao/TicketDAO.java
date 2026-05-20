@@ -13,198 +13,165 @@ import com.tickets.util.ConexionDB;
 
 public class TicketDAO {
 
-    public int crear(Ticket ticket) throws Exception {
+	public int crear(Ticket ticket) throws Exception {
 
-        String sql = """
-                INSERT INTO tickets(
-                    id,
-                    codigo,
-                    descripcion,
-                    estado_actual,
-                    creado_por,
-                    asignado_a
-                )
-                VALUES (?, ?, ?, ?, ?, ?)
-                """;
+		String sql = """
+				INSERT INTO tickets(
+				    id,
+				    codigo,
+				    descripcion,
+				    estado_actual,
+				    creado_por,
+				    asignado_a
+				)
+				VALUES (?, ?, ?, ?, ?, ?)
+				""";
 
-        try (
-                Connection con = ConexionDB.obtenerConexion();
-                PreparedStatement ps = con.prepareStatement(sql)
-        ) {
+		try (Connection con = ConexionDB.obtenerConexion(); PreparedStatement ps = con.prepareStatement(sql)) {
 
-            ps.setInt(1, ticket.getId());
-            ps.setString(2, ticket.getCodigo());
-            ps.setString(3, ticket.getDescripcion());
-            ps.setString(4, ticket.getEstadoActual().name());
-            ps.setInt(5, ticket.getCreadoPor());
+			ps.setInt(1, ticket.getId());
+			ps.setString(2, ticket.getCodigo());
+			ps.setString(3, ticket.getDescripcion());
+			ps.setString(4, ticket.getEstadoActual().name());
+			ps.setInt(5, ticket.getCreadoPor());
 
-            if (ticket.getAsignadoA() == null) {
-                ps.setObject(6, null);
-            } else {
-                ps.setInt(6, ticket.getAsignadoA());
-            }
+			if (ticket.getAsignadoA() == null) {
+				ps.setObject(6, null);
+			} else {
+				ps.setInt(6, ticket.getAsignadoA());
+			}
 
-            ps.executeUpdate();
-            return ticket.getId();
-        }
-    }
+			ps.executeUpdate();
+			return ticket.getId();
+		}
+	}
 
-    public int obtenerSiguienteId() throws Exception {
+	public int obtenerSiguienteId() throws Exception {
 
-        String sql =
-                "SELECT nextval(pg_get_serial_sequence('tickets', 'id'))";
+		String sql = "SELECT nextval(pg_get_serial_sequence('tickets', 'id'))";
 
-        try (
-                Connection con = ConexionDB.obtenerConexion();
-                PreparedStatement ps = con.prepareStatement(sql);
-                ResultSet rs = ps.executeQuery()
-        ) {
+		try (Connection con = ConexionDB.obtenerConexion();
+				PreparedStatement ps = con.prepareStatement(sql);
+				ResultSet rs = ps.executeQuery()) {
 
-            if (rs.next()) {
-                return rs.getInt(1);
-            }
+			if (rs.next()) {
+				return rs.getInt(1);
+			}
 
-            throw new Exception("No se pudo generar el id del ticket");
-        }
-    }
+			throw new Exception("No se pudo generar el id del ticket");
+		}
+	}
 
-    public Ticket buscarPorId(int id) throws Exception {
+	public Ticket buscarPorId(int id) throws Exception {
 
-        String sql = "SELECT * FROM tickets WHERE id = ?";
+		String sql = "SELECT * FROM tickets WHERE id = ?";
 
-        try (
-                Connection con = ConexionDB.obtenerConexion();
-                PreparedStatement ps = con.prepareStatement(sql)
-        ) {
+		try (Connection con = ConexionDB.obtenerConexion(); PreparedStatement ps = con.prepareStatement(sql)) {
 
-            ps.setInt(1, id);
+			ps.setInt(1, id);
 
-            try (ResultSet rs = ps.executeQuery()) {
+			try (ResultSet rs = ps.executeQuery()) {
 
-                if (rs.next()) {
-                    return mapearTicket(rs);
-                }
-            }
-        }
+				if (rs.next()) {
+					return mapearTicket(rs);
+				}
+			}
+		}
 
-        return null;
-    }
+		return null;
+	}
 
-    public List<Ticket> listar() throws Exception {
+	public List<Ticket> listar() throws Exception {
 
-        List<Ticket> lista = new ArrayList<>();
+		List<Ticket> lista = new ArrayList<>();
 
-        String sql = "SELECT * FROM tickets ORDER BY id DESC";
+		String sql = "SELECT * FROM tickets ORDER BY id DESC";
 
-        try (
-                Connection con = ConexionDB.obtenerConexion();
-                PreparedStatement ps = con.prepareStatement(sql);
-                ResultSet rs = ps.executeQuery()
-        ) {
+		try (Connection con = ConexionDB.obtenerConexion();
+				PreparedStatement ps = con.prepareStatement(sql);
+				ResultSet rs = ps.executeQuery()) {
 
-            while (rs.next()) {
-                lista.add(mapearTicket(rs));
-            }
-        }
+			while (rs.next()) {
+				lista.add(mapearTicket(rs));
+			}
+		}
 
-        return lista;
-    }
+		return lista;
+	}
 
-    public void actualizarEstado(int id, EstadoTicket estado)
-            throws Exception {
+	public void actualizarEstado(int id, EstadoTicket estado) throws Exception {
 
-        String sql = """
-                UPDATE tickets
-                SET estado_actual = ?
-                WHERE id = ?
-                """;
+		String sql = """
+				UPDATE tickets
+				SET estado_actual = ?
+				WHERE id = ?
+				""";
 
-        try (
-                Connection con = ConexionDB.obtenerConexion();
-                PreparedStatement ps = con.prepareStatement(sql)
-        ) {
+		try (Connection con = ConexionDB.obtenerConexion(); PreparedStatement ps = con.prepareStatement(sql)) {
 
-            ps.setString(1, estado.name());
-            ps.setInt(2, id);
-            ps.executeUpdate();
-        }
-    }
+			ps.setString(1, estado.name());
+			ps.setInt(2, id);
+			ps.executeUpdate();
+		}
+	}
 
-    public void actualizarEstado(
-            int id,
-            EstadoTicket estado,
-            Integer asignadoA
-    ) throws Exception {
+	public void actualizarEstado(int id, EstadoTicket estado, Integer asignadoA) throws Exception {
 
-        String sql = """
-                UPDATE tickets
-                SET estado_actual = ?,
-                    asignado_a = ?
-                WHERE id = ?
-                """;
+		String sql = """
+				UPDATE tickets
+				SET estado_actual = ?,
+				    asignado_a = ?
+				WHERE id = ?
+				""";
 
-        try (
-                Connection con = ConexionDB.obtenerConexion();
-                PreparedStatement ps = con.prepareStatement(sql)
-        ) {
+		try (Connection con = ConexionDB.obtenerConexion(); PreparedStatement ps = con.prepareStatement(sql)) {
 
-            ps.setString(1, estado.name());
-            ps.setObject(2, asignadoA);
-            ps.setInt(3, id);
-            ps.executeUpdate();
-        }
-    }
+			ps.setString(1, estado.name());
+			ps.setObject(2, asignadoA);
+			ps.setInt(3, id);
+			ps.executeUpdate();
+		}
+	}
 
-    public void eliminar(int id) throws Exception {
+	public void eliminar(int id) throws Exception {
 
-        String sql = "DELETE FROM tickets WHERE id = ?";
+		String sql = "DELETE FROM tickets WHERE id = ?";
 
-        try (
-                Connection con = ConexionDB.obtenerConexion();
-                PreparedStatement ps = con.prepareStatement(sql)
-        ) {
+		try (Connection con = ConexionDB.obtenerConexion(); PreparedStatement ps = con.prepareStatement(sql)) {
 
-            ps.setInt(1, id);
-            ps.executeUpdate();
-        }
-    }
+			ps.setInt(1, id);
+			ps.executeUpdate();
+		}
+	}
 
-    private Ticket mapearTicket(ResultSet rs) throws Exception {
+	private Ticket mapearTicket(ResultSet rs) throws Exception {
 
-        Ticket ticket = new Ticket();
+		Ticket ticket = new Ticket();
 
-        ticket.setId(rs.getInt("id"));
-        ticket.setCodigo(rs.getString("codigo"));
-        ticket.setDescripcion(rs.getString("descripcion"));
-        ticket.setEstadoActual(
-                EstadoTicket.valueOf(rs.getString("estado_actual"))
-        );
-        ticket.setCreadoPor(rs.getInt("creado_por"));
+		ticket.setId(rs.getInt("id"));
+		ticket.setCodigo(rs.getString("codigo"));
+		ticket.setDescripcion(rs.getString("descripcion"));
+		ticket.setEstadoActual(EstadoTicket.valueOf(rs.getString("estado_actual")));
+		ticket.setCreadoPor(rs.getInt("creado_por"));
 
-        Timestamp fechaCreacion =
-                rs.getTimestamp("fecha_creacion");
+		Timestamp fechaCreacion = rs.getTimestamp("fecha_creacion");
 
-        if (fechaCreacion != null) {
-            ticket.setFechaCreacion(
-                    fechaCreacion.toLocalDateTime().toString()
-            );
-        }
+		if (fechaCreacion != null) {
+			ticket.setFechaCreacion(fechaCreacion.toLocalDateTime().toString());
+		}
 
-        Timestamp fechaCierre =
-                rs.getTimestamp("fecha_cierre");
+		Timestamp fechaCierre = rs.getTimestamp("fecha_cierre");
 
-        if (fechaCierre != null) {
-            ticket.setFechaCierre(
-                    fechaCierre.toLocalDateTime().toString()
-            );
-        }
+		if (fechaCierre != null) {
+			ticket.setFechaCierre(fechaCierre.toLocalDateTime().toString());
+		}
 
-        int asignadoA = rs.getInt("asignado_a");
+		int asignadoA = rs.getInt("asignado_a");
 
-        if (!rs.wasNull()) {
-            ticket.setAsignadoA(asignadoA);
-        }
+		if (!rs.wasNull()) {
+			ticket.setAsignadoA(asignadoA);
+		}
 
-        return ticket;
-    }
+		return ticket;
+	}
 }
