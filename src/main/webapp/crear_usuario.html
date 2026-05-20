@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Crear cuenta | Sistema de Tickets</title>
+    <link rel="stylesheet" href="css/global.css">
+    <link rel="stylesheet" href="css/login.css">
+</head>
+
+<body class="login-page">
+
+    <main class="login-card">
+
+        <h1>Crear cuenta</h1>
+        <p>Completa el formulario para registrarte en el sistema de tickets.</p>
+
+        <form id="usuarioForm" class="form-grid">
+
+            <div class="field">
+                <label for="nombre">Nombre</label>
+                <input
+                    type="text"
+                    id="nombre"
+                    name="nombre"
+                    placeholder="Ingrese su nombre"
+                    autocomplete="name"
+                    required
+                >
+            </div>
+
+            <div class="field">
+                <label for="correo">Correo</label>
+                <input
+                    type="email"
+                    id="correo"
+                    name="correo"
+                    placeholder="correo@ejemplo.com"
+                    autocomplete="email"
+                    required
+                >
+            </div>
+
+            <div class="field">
+                <label for="departamento">Departamento</label>
+                <input
+                    type="text"
+                    id="departamento"
+                    name="departamento"
+                    placeholder="Ingrese su departamento"
+                    autocomplete="off"
+                >
+            </div>
+
+            <div class="field">
+                <label for="rol">Rol</label>
+                <select id="rol" name="rol" required>
+                    <option value="">Seleccione un rol</option>
+                    <option value="SOLICITANTE">Solicitante</option>
+                    <option value="SOPORTE">Soporte</option>
+                    <option value="ADMIN">Administrador</option>
+                </select>
+            </div>
+
+            <div class="field">
+                <label for="contrasena">Contraseña</label>
+                <input
+                    type="password"
+                    id="contrasena"
+                    name="contrasena"
+                    placeholder="Ingrese su contraseña"
+                    autocomplete="new-password"
+                    required
+                >
+            </div>
+
+            <button class="btn" type="submit">Crear cuenta</button>
+
+        </form>
+
+        <p id="mensaje" class="message"></p>
+
+        <p class="login-link">¿Ya tienes cuenta? <a href="login.html">Iniciar sesión</a></p>
+
+    </main>
+
+    <!-- JavaScript -->
+    <script src="js/api.js"></script>
+    <script src="js/registro.js"></script>
+
+</body>
+
+</html>
