@@ -13,12 +13,18 @@ function protegerSesion() {
 function prepararNavegacion() {
     const nombre = localStorage.getItem("nombre") || "Usuario";
     const rol = localStorage.getItem("rol") || "";
-    const usuarioActivo = document.getElementById("usuarioActivo");
     const linkUsuarios = document.getElementById("linkUsuarios");
     const logoutLink = document.getElementById("logoutLink");
 
-    usuarioActivo.textContent = `${nombre} · ${rol}`;
+    const iniciales = nombre.split(" ").map(p => p[0]).slice(0, 2).join("").toUpperCase();
 
+    document.getElementById("usuarioAvatar").textContent = iniciales;
+    document.getElementById("usuarioNombre").textContent = nombre;
+    document.getElementById("usuarioRol").textContent = rol;
+
+    document.getElementById("toggleSidebar").addEventListener("click", () => {
+    document.getElementById("sidebar").classList.toggle("collapsed");
+    });
     if (rol !== "SOPORTE" && linkUsuarios) {
         linkUsuarios.style.display = "none";
     }
