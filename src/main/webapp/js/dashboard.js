@@ -5,9 +5,13 @@ document.addEventListener("DOMContentLoaded", () => {
 });
 
 function protegerSesion() {
-    if (!localStorage.getItem("usuarioId")) {
-        window.location.href = "login.html";
-    }
+	if (!localStorage.getItem("usuarioId")) {
+	    window.location.href = "login.html";
+	    return;
+	}
+	if (localStorage.getItem("rol") === "SOLICITANTE") {
+	    window.location.href = "dashboardSolicitante.html";
+	}
 }
 
 function prepararNavegacion() {

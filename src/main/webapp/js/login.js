@@ -3,16 +3,16 @@ document.addEventListener("DOMContentLoaded", () => {
 	const usuarioId = localStorage.getItem("usuarioId");
 
 	if (usuarioId) {
-
 	        const irDashboard = confirm(
 	            "Ya existe una sesión iniciada. ¿Desea ir al dashboard?"
 	        );
 
 	        if (irDashboard) {
-
-	            window.location.href = "dashboard.html";
+	            const rol = localStorage.getItem("rol");
+	            window.location.href = rol === "SOLICITANTE"
+	                ? "dashboardSolicitante.html"
+	                : "dashboard.html";
 	            return;
-
 	        }
     }
 
@@ -51,7 +51,7 @@ async function login(event) {
         localStorage.setItem("correo", data.correo || correo);
         localStorage.setItem("rol", data.rol);
 
-        window.location.href = "dashboard.html";
+        window.location.href = data.rol === "SOLICITANTE" ? "dashboardSolicitante.html" : "dashboard.html";
     } catch (error) {
         console.error(error);
         mostrarMensaje("No se pudo conectar con el backend", "error");

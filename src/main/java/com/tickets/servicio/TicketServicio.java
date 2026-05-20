@@ -150,7 +150,7 @@ public class TicketServicio {
                     nuevo == EstadoTicket.FINALIZADO
                     || nuevo == EstadoTicket.DEVUELTO;
             case DEVUELTO ->
-                    nuevo == EstadoTicket.ASIGNADO;
+                    nuevo == EstadoTicket.VALIDACION;
             case FINALIZADO, RECHAZADO ->
                     false;
         };

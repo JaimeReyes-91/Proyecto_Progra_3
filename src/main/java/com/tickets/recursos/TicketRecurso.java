@@ -1,11 +1,16 @@
 package com.tickets.recursos;
 
+import java.io.InputStream;
 import java.util.Map;
+
+import org.glassfish.jersey.media.multipart.FormDataParam;
+import org.glassfish.jersey.media.multipart.FormDataContentDisposition;
 
 import com.tickets.dao.TimeLineDAO;
 import com.tickets.modelo.EstadoTicket;
 import com.tickets.modelo.LineaTiempoEvento;
 import com.tickets.modelo.Ticket;
+import com.tickets.servicio.ArchivoServicio;
 import com.tickets.servicio.TicketServicio;
 
 import jakarta.ws.rs.Consumes;
@@ -24,8 +29,9 @@ import jakarta.ws.rs.core.Response;
 @Consumes(MediaType.APPLICATION_JSON)
 public class TicketRecurso {
 
-    private final TicketServicio ticketServicio =
-            new TicketServicio();
+    private final TicketServicio ticketServicio = new TicketServicio();
+    
+    private final ArchivoServicio archivoServicio = new ArchivoServicio();
 
         private TimeLineDAO timeLineDAO = new TimeLineDAO();
 
@@ -78,17 +84,28 @@ public class TicketRecurso {
     }
 
     @POST
+    @Consumes(MediaType.MULTIPART_FORM_DATA)
     public Response crear(
-            Ticket ticket
+    		 @FormDataParam("descripcion") String descripcion,
+	        @FormDataParam("creadoPor") int creadoPor,
+	        @FormDataParam("archivo") InputStream archivoStream,
+	        @FormDataParam("archivo") FormDataContentDisposition archivoInfo
     ) {
 
         try {
 
             Ticket creado =
-                    ticketServicio.crear(
-                            ticket.getDescripcion(),
-                            ticket.getCreadoPor()
-                    );
+                    ticketServicio.crear(descripcion, creadoPor);
+            
+            if (archivoInfo != null && archivoInfo.getFileName() != null) {
+                archivoServicio.subirArchivo(
+                        creado.getId(),
+                        archivoInfo.getFileName(),
+                        archivoInfo.getType(),
+                        -1,
+                        archivoStream
+                );
+            }
 
             return Response.status(
                     Response.Status.CREATED

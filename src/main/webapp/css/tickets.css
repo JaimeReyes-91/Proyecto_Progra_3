@@ -24,3 +24,14 @@
 
     background: #1f7d35;
 }
+
+.file-input-wrap {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+}
+
+.file-input-wrap span {
+    font-size: 13px;
+    color: var(--color-muted, #888);
+}
