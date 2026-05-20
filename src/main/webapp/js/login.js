@@ -2,8 +2,9 @@ document.addEventListener("DOMContentLoaded", () => {
     const form = document.getElementById("loginForm");
 
     if (localStorage.getItem("usuarioId")) {
-        window.location.href = "dashboard.html";
-        return;
+		const rol = localStorage.getItem("rol");
+		window.location.href = rol === "SOLICITANTE" ? "dashboardSolicitante.html" : "dashboard.html";
+		return;
     }
 
     form.addEventListener("submit", login);
@@ -41,7 +42,7 @@ async function login(event) {
         localStorage.setItem("correo", data.correo || correo);
         localStorage.setItem("rol", data.rol);
 
-        window.location.href = "dashboard.html";
+        window.location.href = data.rol === "SOLICITANTE" ? "dashboardSolicitante.html" : "dashboard.html";
     } catch (error) {
         console.error(error);
         mostrarMensaje("No se pudo conectar con el backend", "error");
