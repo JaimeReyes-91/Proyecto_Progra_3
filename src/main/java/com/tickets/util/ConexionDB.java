@@ -7,13 +7,13 @@ import java.sql.SQLException;
 public class ConexionDB {
 
     private static final String URL =
-            "jdbc:postgresql://localhost:5432/apirest_db";
+            "jdbc:postgresql://localhost:5432/gestor_tareas";
 
     private static final String USUARIO =
             "postgres";
 
     private static final String PASSWORD =
-            "1234";
+            "umg";
 
     private ConexionDB() {
     }

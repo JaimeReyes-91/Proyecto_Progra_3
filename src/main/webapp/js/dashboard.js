@@ -1,14 +1,5 @@
 let ticketsData = [];
 
-const transiciones = {
-    CREADO: ["ASIGNADO", "RECHAZADO"],
-    ASIGNADO: ["VALIDACION", "RECHAZADO"],
-    VALIDACION: ["FINALIZADO", "DEVUELTO"],
-    DEVUELTO: ["ASIGNADO"],
-    FINALIZADO: [],
-    RECHAZADO: []
-};
-
 document.addEventListener("DOMContentLoaded", () => {
     protegerSesion();
     prepararNavegacion();

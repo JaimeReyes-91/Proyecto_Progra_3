@@ -89,6 +89,7 @@ public class TicketServicio {
 
 	private void validarCambioEstado(EstadoTicket actual, EstadoTicket nuevo) throws Exception {
 
+<<<<<<< HEAD
 		boolean permitido = switch (actual) {
 		case CREADO -> nuevo == EstadoTicket.ASIGNADO || nuevo == EstadoTicket.RECHAZADO;
 		case ASIGNADO -> nuevo == EstadoTicket.VALIDACION || nuevo == EstadoTicket.RECHAZADO;
@@ -96,6 +97,23 @@ public class TicketServicio {
 		case DEVUELTO -> nuevo == EstadoTicket.ASIGNADO;
 		case FINALIZADO, RECHAZADO -> false;
 		};
+=======
+        boolean permitido = switch (actual) {
+            case CREADO ->
+                    nuevo == EstadoTicket.ASIGNADO
+                    || nuevo == EstadoTicket.RECHAZADO;
+            case ASIGNADO ->
+                    nuevo == EstadoTicket.VALIDACION
+                    || nuevo == EstadoTicket.RECHAZADO;
+            case VALIDACION ->
+                    nuevo == EstadoTicket.FINALIZADO
+                    || nuevo == EstadoTicket.DEVUELTO;
+            case DEVUELTO ->
+                    nuevo == EstadoTicket.VALIDACION;
+            case FINALIZADO, RECHAZADO ->
+                    false;
+        };
+>>>>>>> 8c7f57188601eeffd8ce3a895d2475ecd29bd6f1
 
 		if (!permitido) {
 			throw new Exception("Cambio de estado no permitido: " + actual + " -> " + nuevo);

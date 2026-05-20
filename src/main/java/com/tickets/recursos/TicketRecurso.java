@@ -1,9 +1,21 @@
 package com.tickets.recursos;
 
+import java.io.InputStream;
 import java.util.Map;
 
+<<<<<<< HEAD
 import com.tickets.modelo.EstadoTicket;
 import com.tickets.modelo.Ticket;
+=======
+import org.glassfish.jersey.media.multipart.FormDataParam;
+import org.glassfish.jersey.media.multipart.FormDataContentDisposition;
+
+import com.tickets.dao.TimeLineDAO;
+import com.tickets.modelo.EstadoTicket;
+import com.tickets.modelo.LineaTiempoEvento;
+import com.tickets.modelo.Ticket;
+import com.tickets.servicio.ArchivoServicio;
+>>>>>>> 8c7f57188601eeffd8ce3a895d2475ecd29bd6f1
 import com.tickets.servicio.TicketServicio;
 
 import jakarta.ws.rs.Consumes;
@@ -23,6 +35,13 @@ import jakarta.ws.rs.core.Response;
 public class TicketRecurso {
 
     private final TicketServicio ticketServicio = new TicketServicio();
+<<<<<<< HEAD
+=======
+    
+    private final ArchivoServicio archivoServicio = new ArchivoServicio();
+
+        private TimeLineDAO timeLineDAO = new TimeLineDAO();
+>>>>>>> 8c7f57188601eeffd8ce3a895d2475ecd29bd6f1
 
     @GET
     public Response listar() {
@@ -46,6 +65,7 @@ public class TicketRecurso {
     }
 
     @POST
+<<<<<<< HEAD
     public Response crear(Ticket ticket) {
         try {
             Ticket creado = ticketServicio.crear(
@@ -54,6 +74,35 @@ public class TicketRecurso {
             );
             return Response.status(Response.Status.CREATED)
                     .entity(creado).build();
+=======
+    @Consumes(MediaType.MULTIPART_FORM_DATA)
+    public Response crear(
+    		 @FormDataParam("descripcion") String descripcion,
+	        @FormDataParam("creadoPor") int creadoPor,
+	        @FormDataParam("archivo") InputStream archivoStream,
+	        @FormDataParam("archivo") FormDataContentDisposition archivoInfo
+    ) {
+
+        try {
+
+            Ticket creado =
+                    ticketServicio.crear(descripcion, creadoPor);
+            
+            if (archivoInfo != null && archivoInfo.getFileName() != null) {
+                archivoServicio.subirArchivo(
+                        creado.getId(),
+                        archivoInfo.getFileName(),
+                        archivoInfo.getType(),
+                        -1,
+                        archivoStream
+                );
+            }
+
+            return Response.status(
+                    Response.Status.CREATED
+            ).entity(creado).build();
+
+>>>>>>> 8c7f57188601eeffd8ce3a895d2475ecd29bd6f1
         } catch (Exception e) {
             return Response.status(Response.Status.BAD_REQUEST)
                     .entity(Map.of("error", e.getMessage())).build();
@@ -68,10 +117,16 @@ public class TicketRecurso {
             @PathParam("estado") String estado,
             @PathParam("actorId") int actorId) {
         try {
+<<<<<<< HEAD
             EstadoTicket nuevoEstado = EstadoTicket.valueOf(estado);
 
             // El servicio registra el timeline internamente
             ticketServicio.cambiarEstado(
+=======
+                EstadoTicket nuevoEstado = EstadoTicket.valueOf(estado);
+
+                ticketServicio.cambiarEstado(
+>>>>>>> 8c7f57188601eeffd8ce3a895d2475ecd29bd6f1
                     id,
                     nuevoEstado,
                     actorId,
