@@ -6,9 +6,7 @@ import java.util.Map;
 import org.glassfish.jersey.media.multipart.FormDataParam;
 import org.glassfish.jersey.media.multipart.FormDataContentDisposition;
 
-import com.tickets.dao.TimeLineDAO;
 import com.tickets.modelo.EstadoTicket;
-import com.tickets.modelo.LineaTiempoEvento;
 import com.tickets.modelo.Ticket;
 import com.tickets.servicio.ArchivoServicio;
 import com.tickets.servicio.TicketServicio;
@@ -33,7 +31,10 @@ public class TicketRecurso {
     
     private final ArchivoServicio archivoServicio = new ArchivoServicio();
 
+<<<<<<< HEAD
         private TimeLineDAO timeLineDAO = new TimeLineDAO();
+=======
+>>>>>>> 7e790a5c10b03a3f84c3f6700db4717faa703f06
 
     @GET
     public Response listar() {
@@ -93,19 +94,34 @@ public class TicketRecurso {
     // /system/tickets/{id}/{estado}/{actorId}
     @PUT
     @Path("/{id}/{estado}/{actorId}")
+    @Consumes(MediaType.APPLICATION_JSON)
     public Response cambiarEstado(
             @PathParam("id") int id,
             @PathParam("estado") String estado,
-            @PathParam("actorId") int actorId) {
+            @PathParam("actorId") int actorId,
+    		Map<String, String> body){
         try {
                 EstadoTicket nuevoEstado = EstadoTicket.valueOf(estado);
+                
+                String observacion = (body != null && body.get("observacion") != null && !body.get("observacion").isBlank())
+                        ? body.get("observacion")
+                        : switch (nuevoEstado) {
+                            case ASIGNADO   -> "Ticket aceptado por el técnico";
+                            case RECHAZADO  -> "Ticket rechazado";
+                            case VALIDACION -> "Enviado a validación";
+                            case DEVUELTO   -> "Solución rechazada por el solicitante";
+                            case FINALIZADO -> "Solución aprobada por el solicitante";
+                            default         -> "Estado actualizado a " + nuevoEstado.name();
+                        };
+                
+                Integer asignadoA = nuevoEstado == EstadoTicket.ASIGNADO ? actorId : null;
 
                 ticketServicio.cambiarEstado(
                     id,
                     nuevoEstado,
                     actorId,
-                    "Estado actualizado a " + nuevoEstado.name(),
-                    null
+                    observacion,
+                    asignadoA
             );
 
             return Response.ok(Map.of("mensaje", "Estado actualizado")).build();

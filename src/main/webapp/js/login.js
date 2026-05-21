@@ -1,66 +1,144 @@
 document.addEventListener("DOMContentLoaded", () => {
+
     const form = document.getElementById("loginForm");
-	const usuarioId = localStorage.getItem("usuarioId");
 
-	if (usuarioId) {
-	        const irDashboard = confirm(
-	            "Ya existe una sesión iniciada. ¿Desea ir al dashboard?"
-	        );
+    const usuarioId = localStorage.getItem("usuarioId");
 
-	        if (irDashboard) {
-	            const rol = localStorage.getItem("rol");
-	            window.location.href = rol === "SOLICITANTE"
-	                ? "dashboardSolicitante.html"
-	                : "dashboard.html";
-	            return;
-	        }
+    if (usuarioId) {
+
+        const irDashboard = confirm(
+            "Ya existe una sesión iniciada. ¿Desea ir al dashboard?"
+        );
+
+        if (irDashboard) {
+
+            redirigirSegunRol(
+                localStorage.getItem("rol")
+            );
+
+            return;
+        }
     }
 
     form.addEventListener("submit", login);
-	});
+
+});
 
 async function login(event) {
+
     event.preventDefault();
 
-    const correo = document.getElementById("correo").value.trim();
-    const contrasena = document.getElementById("contrasena").value;
+    const correo = document
+        .getElementById("correo")
+        .value
+        .trim();
+
+    const contrasena = document
+        .getElementById("contrasena")
+        .value;
 
     mostrarMensaje("", "");
 
     try {
-        const response = await fetch(API_URL + "/auth/login", {
-            method: "POST",
-            headers: {
-                "Content-Type": "application/json"
-            },
-            body: JSON.stringify({
-                correo,
-                contrasena
-            })
-        });
+
+        const response = await fetch(
+            API_URL + "/auth/login",
+            {
+                method: "POST",
+
+                headers: {
+                    "Content-Type": "application/json"
+                },
+
+                body: JSON.stringify({
+                    correo,
+                    contrasena
+                })
+            }
+        );
 
         const data = await response.json();
 
         if (!response.ok || !data.autenticado) {
-            mostrarMensaje(data.mensaje || "No se pudo iniciar sesión", "error");
+
+            mostrarMensaje(
+                data.mensaje || "No se pudo iniciar sesión",
+                "error"
+            );
+
             return;
         }
 
-        localStorage.setItem("usuarioId", data.usuarioId);
-        localStorage.setItem("nombre", data.nombre || correo);
-        localStorage.setItem("correo", data.correo || correo);
-        localStorage.setItem("rol", data.rol);
+        localStorage.setItem(
+            "usuarioId",
+            data.usuarioId
+        );
 
-        window.location.href = data.rol === "SOLICITANTE" ? "dashboardSolicitante.html" : "dashboard.html";
+        localStorage.setItem(
+            "nombre",
+            data.nombre || correo
+        );
+
+        localStorage.setItem(
+            "correo",
+            data.correo || correo
+        );
+
+        localStorage.setItem(
+            "rol",
+            data.rol
+        );
+
+        redirigirSegunRol(data.rol);
+
     } catch (error) {
+
         console.error(error);
-        mostrarMensaje("No se pudo conectar con el backend", "error");
+
+        mostrarMensaje(
+            "No se pudo conectar con el backend",
+            "error"
+        );
+
     }
+
+}
+
+function redirigirSegunRol(rol) {
+
+    switch (rol) {
+
+        case "SOLICITANTE":
+
+            window.location.href =
+                "dashboardSolicitante.html";
+
+            break;
+
+        case "SOPORTE":
+
+            window.location.href =
+                "dashboardSoporte.html";
+
+            break;
+
+        default:
+
+            window.location.href =
+                "login.html";
+
+    }
+
 }
 
 function mostrarMensaje(texto, tipo) {
+
     const mensaje = document.getElementById("mensaje");
 
     mensaje.textContent = texto;
-    mensaje.className = texto ? `message show ${tipo}` : "message";
+
+    mensaje.className = texto
+        ? `message show ${tipo}`
+        : "message";
+
 }

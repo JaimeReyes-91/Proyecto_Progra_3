@@ -14,8 +14,10 @@ body {
     font-size: 0.9rem;
     color: #666;
     text-decoration: none;
+    
 }
 
 .registro:hover {
     text-decoration: underline;
+ 
 }

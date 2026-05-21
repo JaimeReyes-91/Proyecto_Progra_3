@@ -1,0 +1,254 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Dashboard Soporte | Sistema de Tickets</title>
+
+    <link rel="stylesheet" href="css/global.css">
+    <link rel="stylesheet" href="css/dashboard.css">
+
+    <link rel="stylesheet"
+          href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+</head>
+
+<body>
+
+<div class="app-shell">
+
+    <!-- SIDEBAR -->
+
+    <aside class="sidebar" id="sidebar">
+
+        <div class="brand">
+
+            <strong class="brand-text">
+                Tickets
+            </strong>
+
+            <button class="toggle-btn" id="toggleSidebar">
+                ☰
+            </button>
+
+        </div>
+
+        <nav>
+
+            <a class="nav-link active"
+               href="dashboardSoporte.html">
+
+                <span class="nav-icon">🛠</span>
+                <span class="nav-text">Dashboard</span>
+
+            </a>
+
+            <a class="nav-link"
+               href="ticketsSoporte.html">
+
+                <span class="nav-icon">🎫</span>
+                <span class="nav-text">Tickets</span>
+
+            </a>
+
+            <a class="nav-link"
+               href="#"
+               id="logoutLink">
+
+                <span class="nav-icon">🚪</span>
+                <span class="nav-text">Salir</span>
+
+            </a>
+
+        </nav>
+
+    </aside>
+
+    <!-- CONTENIDO -->
+
+    <main class="main">
+
+        <!-- TOPBAR -->
+
+        <header class="topbar">
+
+            <div>
+
+                <h1>Panel de Soporte</h1>
+
+                <p>
+                    Gestión operativa de tickets asignados y pendientes de revisión.
+                </p>
+
+            </div>
+
+            <div class="user-chip">
+
+                <div class="avatar" id="usuarioAvatar"></div>
+
+                <div class="info">
+
+                    <div class="nombre" id="usuarioNombre"></div>
+
+                    <div class="rol" id="usuarioRol"></div>
+
+                </div>
+
+            </div>
+
+        </header>
+
+        <!-- MENSAJES -->
+
+        <p id="mensaje" class="message"></p>
+
+        <!-- KPI -->
+
+        <section class="grid kpis">
+
+            <article class="kpi">
+
+                <div class="kpi-icon">
+                    <i class="fa-solid fa-inbox"></i>
+                </div>
+
+                <span>Nuevos</span>
+
+                <strong id="ticketsNuevos">0</strong>
+
+            </article>
+
+            <article class="kpi">
+
+                <div class="kpi-icon">
+                    <i class="fa-solid fa-user-check"></i>
+                </div>
+
+                <span>Asignados</span>
+
+                <strong id="ticketsAsignados">0</strong>
+
+            </article>
+
+            <article class="kpi">
+
+                <div class="kpi-icon">
+                    <i class="fa-solid fa-clipboard-check"></i>
+                </div>
+
+                <span>En validación</span>
+
+                <strong id="ticketsValidacion">0</strong>
+
+            </article>
+
+            <article class="kpi">
+
+                <div class="kpi-icon">
+                    <i class="fa-solid fa-rotate-left"></i>
+                </div>
+
+                <span>Devueltos</span>
+
+                <strong id="ticketsDevueltos">0</strong>
+
+            </article>
+
+        </section>
+
+        <!-- TICKETS NUEVOS -->
+
+        <section class="card">
+
+            <div class="card-header">
+
+                <div>
+
+                    <h2>Tickets Nuevos</h2>
+
+                    <p>
+                        Tickets pendientes de revisión inicial por soporte.
+                    </p>
+
+                </div>
+
+            </div>
+
+            <div class="table-wrap">
+
+                <table>
+
+                    <thead>
+
+                    <tr>
+
+                        <th>Código</th>
+                        <th>Descripción</th>
+                        <th>Solicitante</th>
+                        <th>Acciones</th>
+
+                    </tr>
+
+                    </thead>
+
+                    <tbody id="tablaNuevos"></tbody>
+
+                </table>
+
+            </div>
+
+        </section>
+
+        <!-- MIS TICKETS -->
+
+        <section class="card">
+
+            <div class="card-header">
+
+                <div>
+
+                    <h2>Mis Tickets</h2>
+
+                    <p>
+                        Tickets asignados actualmente al técnico.
+                    </p>
+
+                </div>
+
+            </div>
+
+            <div class="table-wrap">
+
+                <table>
+
+                    <thead>
+
+                    <tr>
+
+                        <th>Código</th>
+                        <th>Estado</th>
+                        <th>Descripción</th>
+                        <th>Solicitante</th>
+                        <th>Acciones</th>
+
+                    </tr>
+
+                    </thead>
+
+                    <tbody id="tablaMisTickets"></tbody>
+
+                </table>
+
+            </div>
+
+        </section>
+
+    </main>
+
+</div>
+
+<script src="js/api.js"></script>
+<script src="js/dashboardSoporte.js"></script>
+
+</body>
+</html>
