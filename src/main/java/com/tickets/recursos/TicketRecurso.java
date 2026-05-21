@@ -90,19 +90,34 @@ public class TicketRecurso {
     // /system/tickets/{id}/{estado}/{actorId}
     @PUT
     @Path("/{id}/{estado}/{actorId}")
+    @Consumes(MediaType.APPLICATION_JSON)
     public Response cambiarEstado(
             @PathParam("id") int id,
             @PathParam("estado") String estado,
-            @PathParam("actorId") int actorId) {
+            @PathParam("actorId") int actorId,
+    		Map<String, String> body){
         try {
                 EstadoTicket nuevoEstado = EstadoTicket.valueOf(estado);
+                
+                String observacion = (body != null && body.get("observacion") != null && !body.get("observacion").isBlank())
+                        ? body.get("observacion")
+                        : switch (nuevoEstado) {
+                            case ASIGNADO   -> "Ticket aceptado por el técnico";
+                            case RECHAZADO  -> "Ticket rechazado";
+                            case VALIDACION -> "Enviado a validación";
+                            case DEVUELTO   -> "Solución rechazada por el solicitante";
+                            case FINALIZADO -> "Solución aprobada por el solicitante";
+                            default         -> "Estado actualizado a " + nuevoEstado.name();
+                        };
+                
+                Integer asignadoA = nuevoEstado == EstadoTicket.ASIGNADO ? actorId : null;
 
                 ticketServicio.cambiarEstado(
                     id,
                     nuevoEstado,
                     actorId,
-                    "Estado actualizado a " + nuevoEstado.name(),
-                    null
+                    observacion,
+                    asignadoA
             );
 
             return Response.ok(Map.of("mensaje", "Estado actualizado")).build();
