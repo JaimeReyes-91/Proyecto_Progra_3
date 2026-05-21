@@ -32,6 +32,10 @@ function prepararNavegacion() {
 
     usuarioActivo.textContent = `${nombre} · ${rol}`;
 
+	if (rol !== "SOPORTE" && linkUsuarios) {
+	    linkUsuarios.style.display = "none";
+	}
+	
 	if (linkDashboard) {
 	    linkDashboard.href = localStorage.getItem("rol") === "SOLICITANTE"
 	        ? "dashboardSolicitante.html"
