@@ -28,12 +28,21 @@ function prepararNavegacion() {
     const usuarioActivo = document.getElementById("usuarioActivo");
     const linkUsuarios = document.getElementById("linkUsuarios");
     const logoutLink = document.getElementById("logoutLink");
+	const linkDashboard = document.getElementById("linkDashboard");
 
     usuarioActivo.textContent = `${nombre} · ${rol}`;
 
-    if (rol !== "SOPORTE" && linkUsuarios) {
-        linkUsuarios.style.display = "none";
-    }
+	if (linkDashboard) {
+	    linkDashboard.href = localStorage.getItem("rol") === "SOLICITANTE"
+	        ? "dashboardSolicitante.html"
+	        : "dashboard.html";
+	}
+	
+	if (localStorage.getItem("rol") === "SOPORTE") {
+	    const formulario = document.getElementById("ticketForm").closest("article");
+	    formulario.style.display = "none";
+	    formulario.closest("section").style.gridTemplateColumns = "1fr";
+	}
 
     logoutLink.addEventListener("click", cerrarSesion);
 }
@@ -43,6 +52,14 @@ function prepararFormulario() {
     const creadoPor = document.getElementById("creadoPor");
     const filtro = document.getElementById("filtroTickets");
 
+	if (localStorage.getItem("rol") === "SOLICITANTE") {
+	    document.getElementById("creadoPorField").style.display = "none";
+	}
+	
+	if (localStorage.getItem("rol") === "SOPORTE") {
+	    document.getElementById("ticketForm").closest("article").style.display = "none";
+	}
+	
     creadoPor.value = usuarioId || "";
 
     document.getElementById("ticketForm").addEventListener("submit", crearTicket);
@@ -76,6 +93,15 @@ function renderTickets() {
 	const usuarioId = parseInt(localStorage.getItem("usuarioId"), 10);
 	const rol       = localStorage.getItem("rol");
 	const esSolicitante = rol === "SOLICITANTE";
+	
+	document.querySelector("#tablaTickets").closest("table").querySelector("thead tr").innerHTML = `
+	    <th>Código</th>
+	    <th>Descripción</th>
+	    <th>Estado</th>
+	    ${!esSolicitante ? "<th>Solicitante</th>" : ""}
+	    <th>Timeline</th>
+	    <th>Acciones</th>
+	`;
 
 	let visibles = tickets.filter(ticket => {
 	    const texto = [
@@ -87,8 +113,6 @@ function renderTickets() {
 
 	    const coincideFiltro = texto.includes(filtro);
 
-<<<<<<< HEAD
-=======
 	    // Solicitante solo ve sus propios tickets
 	    const esSuyo = !esSolicitante || ticket.creadoPor === usuarioId;
 
@@ -100,35 +124,30 @@ function renderTickets() {
 	    return;
 	}
 
->>>>>>> 8c7f57188601eeffd8ce3a895d2475ecd29bd6f1
 	tabla.innerHTML = visibles.map(ticket => `
-	    <tr>
-	        <td>${escapar(ticket.codigo || "-")}</td>
-	        <td>${escapar(ticket.descripcion || "-")}</td>
-	        <td><span class="badge ${ticket.estadoActual}">${formatearEstado(ticket.estadoActual)}</span></td>
-<<<<<<< HEAD
-	        <td>
-	            ${ticket.creadoPor || "-"}
-	            <button class="btn small secondary" type="button" onclick="verTimeline(${ticket.id}, '${escapar(ticket.codigo)}')">
-	                🕓 Timeline
-	            </button>
-	        </td>
-	        <td>
-	            <div class="actions">
-	                ${botonesEstado(ticket)}
-	                <button class="btn small danger" type="button" onclick="eliminarTicket(${ticket.id})">Eliminar</button>
-=======
-	        <td>${ticket.creadoPor || "-"}</td>
-	        <td>
-	            <div class="actions">
-	                ${botonesEstado(ticket, esSolicitante)}
-	                ${!esSolicitante || ticket.estadoActual === "CREADO"
-	                    ? `<button class="btn small danger" type="button" onclick="eliminarTicket(${ticket.id})">Eliminar</button>`
-	                    : ""}
->>>>>>> 8c7f57188601eeffd8ce3a895d2475ecd29bd6f1
-	            </div>
-	        </td>
-	    </tr>
+		<tr>
+           <td>${escapar(ticket.codigo || "-")}</td>
+           <td>${escapar(ticket.descripcion || "-")}</td>
+           <td>
+               <span class="badge ${ticket.estadoActual}">
+                   ${formatearEstado(ticket.estadoActual)}
+               </span>
+           </td>
+           ${!esSolicitante ? `<td>${ticket.creadoPor || "-"}</td>` : ""}
+           <td>
+               <button class="btn small secondary" type="button" onclick="verTimeline(${ticket.id}, '${escapar(ticket.codigo)}')">
+                   🕓
+               </button>
+           </td>
+           <td>
+               <div class="actions">
+                   ${botonesEstado(ticket, esSolicitante)}
+                   ${!esSolicitante || ticket.estadoActual === "CREADO"
+                       ? `<button class="btn small icon" type="button" onclick="eliminarTicket(${ticket.id})" title="Eliminar">🗑️</button>`
+                       : ""}
+               </div>
+           </td>
+        </tr>
 	`).join("");
 }
 
@@ -205,17 +224,54 @@ async function crearTicket(event) {
     }
 }
 
-async function cambiarEstado(id, estado) {
-    const actorId = localStorage.getItem("usuarioId");
-    try {
+let _pendienteId = null;
+let _pendienteEstado = null;
 
+function cambiarEstado(id, estado) {
+
+	    _pendienteId = id;
+	    _pendienteEstado = estado;
+
+	    const titulos = {
+	        ASIGNADO:   "Aceptar ticket",
+	        RECHAZADO:  "Rechazar ticket",
+	        VALIDACION: "Enviar a validación",
+	        DEVUELTO:   "Rechazar solución",
+	        FINALIZADO: "Aprobar solución"
+	    };
+
+	    document.getElementById("modalObsTitulo").textContent = titulos[estado] || "Observación";
+	    document.getElementById("inputObservacion").value = "";
+	    document.getElementById("modalObservacion").classList.add("activo");
+	
+}
+
+async function confirmarCambioEstado() {
+    const observacion = document.getElementById("inputObservacion").value.trim();
+    const actorId = localStorage.getItem("usuarioId");
+	
+	const id = _pendienteId;
+    const estado = _pendienteEstado;
+
+    cerrarModalObs(); // ahora sí puede resetear las variables
+
+    try {
         const response = await fetch(`${API_URL}/tickets/${id}/${estado}/${actorId}`, {
-            method: "PUT"
+            method: "PUT",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({ observacion })
         });
 
+        const text = await response.text();
+        console.log("Respuesta:", response.status, text);
+
         if (!response.ok) {
-            const data = await response.json();
-            throw new Error(data.error || "No se pudo actualizar el estado");
+            try {
+                const data = JSON.parse(text);
+                throw new Error(data.error || "No se pudo actualizar el estado");
+            } catch {
+                throw new Error("Error del servidor: " + response.status);
+            }
         }
 
         mostrarMensaje("Estado actualizado", "ok");
@@ -288,23 +344,38 @@ async function verTimeline(ticketId, codigo) {
 
         
         const contenido = eventos.length
-            ? eventos.map(e => `
-                <div class="timeline-evento">
-                    <span class="badge ${e.estado}">${formatearEstado(e.estado)}</span>
-                    <span class="timeline-obs">${escapar(e.observacion || "Sin observación")}</span>
-                    <span class="timeline-fecha">${e.fechaEvento || ""}</span>
-                </div>
-            `).join("")
+            ? eventos.map(e =>		{
+                const fecha = e.fechaEvento ? e.fechaEvento.replace("T", " ").substring(0, 16) : "";
+                return `
+                    <div class="timeline-item">
+                        <div class="timeline-dot ${e.estado}"></div>
+                        <div class="timeline-info">
+                            <span class="timeline-fecha">${fecha}</span>
+                            <span class="timeline-estado">${formatearEstado(e.estado)}</span>
+                            <span class="timeline-obs">${escapar(e.observacion || "Sin observación")}</span>
+                        </div>
+                    </div>
+                `;
+            }).join("")
             : "<p>No hay eventos registrados.</p>";
-
         
         const modal = document.getElementById("modalTimeline");
         document.getElementById("modalTitulo").textContent = `Timeline de ${codigo}`;
         document.getElementById("modalContenido").innerHTML = contenido;
-        modal.style.display = "flex";
+        modal.classList.add("activo"); // <- cambia modal.style.display = "flex"
 
-    } catch (error) {
-        console.error(error);
-        mostrarMensaje(error.message, "error");
-    }
+	    } catch (error) {
+	        console.error(error);
+	        mostrarMensaje(error.message, "error");
+	    }
+	}
+	
+	function cerrarModal() {
+	    document.getElementById("modalTimeline").classList.remove("activo");
+}
+
+	function cerrarModalObs() {
+	    document.getElementById("modalObservacion").classList.remove("activo");
+	    _pendienteId = null;
+	    _pendienteEstado = null;
 }
