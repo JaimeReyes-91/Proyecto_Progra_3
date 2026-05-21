@@ -1,36 +1,79 @@
 <!DOCTYPE html>
 <html lang="es">
+
 <head>
+
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <meta name="viewport"
+          content="width=device-width, initial-scale=1.0">
+
     <title>Iniciar sesión | Sistema de Tickets</title>
+
     <link rel="stylesheet" href="css/global.css">
     <link rel="stylesheet" href="css/login.css">
+
 </head>
+
 <body class="login-page">
+
     <main class="login-card">
+
         <h1>Sistema de Tickets</h1>
-        <p>Ingresa con tu correo y contraseña para administrar solicitudes de soporte.</p>
+
+        <p>
+            Ingresa con tu correo y contraseña
+            para acceder al sistema.
+        </p>
 
         <form id="loginForm" class="form-grid">
+
             <div class="field">
-                <label for="correo">Correo</label>
-                <input type="email" id="correo" name="correo" autocomplete="email" placeholder="correo@ejemplo.com" required>
+
+                <label for="correo">
+                    Correo electrónico
+                </label>
+
+                <input type="email"
+                       id="correo"
+                       name="correo"
+                       placeholder="correo@ejemplo.com"
+                       autocomplete="email"
+                       required>
+
             </div>
 
             <div class="field">
-                <label for="contrasena">Contraseña</label>
-                <input type="password" id="contrasena" name="contrasena" autocomplete="current-password" placeholder="Ingrese su contraseña" required>
+
+                <label for="contrasena">
+                    Contraseña
+                </label>
+
+                <input type="password"
+                       id="contrasena"
+                       name="contrasena"
+                       placeholder="Ingrese su contraseña"
+                       autocomplete="current-password"
+                       required>
+
             </div>
 
-            <button class="btn" type="submit">Ingresar</button>
-            <a href="crear_usuario.html" class="btn secondary" id="registro"> Registrarse </a>
+
+            <div style="display: flex; flex-direction: column; align-items: center; gap: 0.5rem;">
+			    <button class="btn" type="submit">Ingresar</button>
+			    <a href="crear_usuario.html" class="btn secondary" id="registro">Registrarse</a>
+			</div>
+            
+
         </form>
 
         <p id="mensaje" class="message"></p>
+
     </main>
 
     <script src="js/api.js"></script>
     <script src="js/login.js"></script>
+
 </body>
+
 </html>

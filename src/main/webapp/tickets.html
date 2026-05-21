@@ -4,143 +4,357 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Tickets | Sistema de Tickets</title>
+
     <link rel="stylesheet" href="css/global.css">
     <link rel="stylesheet" href="css/tickets.css">
 </head>
+
 <body>
     <div class="app-shell">
+
+        <!-- SIDEBAR -->
         <aside class="sidebar" id="sidebar">
+
             <div class="brand">
                 <strong class="brand-text">Tickets</strong>
-                <button class="toggle-btn" id="toggleSidebar">☰</button>
+
+                <button
+                    class="toggle-btn"
+                    id="toggleSidebar"
+                    type="button"
+                >
+                    ☰
+                </button>
             </div>
+
             <nav>
-                <a class="nav-link active" href="dashboard.html" id="linkDashboard">
+
+                <a
+                    class="nav-link"
+                    href="dashboard.html"
+                    id="linkDashboard"
+                >
                     <span class="nav-icon">📊</span>
                     <span class="nav-text">Dashboard</span>
                 </a>
-                <a class="nav-link" href="tickets.html">
+
+                <a
+                    class="nav-link active"
+                    href="tickets.html"
+                >
                     <span class="nav-icon">🎫</span>
                     <span class="nav-text">Tickets</span>
                 </a>
-                <a class="nav-link" id="linkUsuarios" href="usuarios.html">
+
+                <a
+                    class="nav-link"
+                    id="linkUsuarios"
+                    href="usuarios.html"
+                >
                     <span class="nav-icon">👥</span>
                     <span class="nav-text">Usuarios</span>
                 </a>
-                <a class="nav-link" href="#" id="logoutLink">
+
+                <a
+                    class="nav-link"
+                    href="#"
+                    id="logoutLink"
+                >
                     <span class="nav-icon">🚪</span>
                     <span class="nav-text">Salir</span>
                 </a>
+
             </nav>
+
         </aside>
 
+        <!-- CONTENIDO -->
         <main class="main">
+
+            <!-- HEADER -->
             <header class="topbar">
+
                 <div>
                     <h1>Gestión de tickets</h1>
-                    <p>Registra solicitudes, consulta estados y avanza el flujo de atención.</p>
+
+                    <p>
+                        Registra solicitudes, consulta estados y administra
+                        el flujo de soporte técnico.
+                    </p>
                 </div>
-                <div class="user-chip" id="usuarioActivo">Sesión activa</div>
+
+                <div class="user-chip">
+
+                    <div class="avatar" id="usuarioAvatar">
+                        U
+                    </div>
+
+                    <div class="info">
+                        <div class="nombre" id="usuarioNombre">
+                            Usuario
+                        </div>
+
+                        <div class="rol" id="usuarioRol">
+                            Rol
+                        </div>
+                    </div>
+
+                </div>
+
             </header>
 
-            <section class="grid two">
-                <article class="card">
+            <!-- CONTENIDO PRINCIPAL -->
+            <section class="grid two" id="contenidoPrincipal">
+
+                <!-- FORMULARIO -->
+                <article class="card" id="cardFormulario">
+
                     <div class="card-header">
+
                         <div>
                             <h2>Nuevo ticket</h2>
-                            <p>Describe con claridad la solicitud para soporte.</p>
+
+                            <p>
+                                Describe detalladamente el problema
+                                para que soporte pueda atenderlo.
+                            </p>
                         </div>
+
                     </div>
 
                     <form id="ticketForm" class="form-grid">
+
                         <div class="field">
-                            <label for="descripcion">Descripción</label>
-                            <textarea id="descripcion" required></textarea>
+
+                            <label for="descripcion">
+                                Descripción
+                            </label>
+
+                            <textarea
+                                id="descripcion"
+                                rows="6"
+                                required
+                                placeholder="Describe el problema..."
+                            ></textarea>
+
                         </div>
 
-                        <div class="field" id="creadoPorField">
-						    <label for="creadoPor">ID del solicitante</label>
-						    <input type="number" id="creadoPor" min="1" required readonly>
-						</div>
-						
-						<div class="field">
-						    <label>Adjuntar archivo</label>
-						    <div class="file-input-wrap">
-						        <button type="button" class="btn secondary small" onclick="document.getElementById('archivo').click()">
-						            📎 Elegir archivo
-						        </button>
-						        <span id="nombreArchivo">Ningún archivo seleccionado</span>
-						        <input type="file" id="archivo" accept=".pdf,.png,.jpg,.jpeg,.doc,.docx" style="display:none">
-						    </div>
-						</div>
+                        <div
+                            class="field"
+                            id="creadoPorField"
+                        >
 
-                        <button class="btn" type="submit">Crear ticket</button>
+                            <label for="creadoPor">
+                                ID del solicitante
+                            </label>
+
+                            <input
+                                type="number"
+                                id="creadoPor"
+                                min="1"
+                                readonly
+                                required
+                            >
+
+                        </div>
+
+                        <div class="field">
+
+                            <label>
+                                Archivo adjunto
+                            </label>
+
+                            <div class="file-input-wrap">
+
+                                <button
+                                    type="button"
+                                    class="btn secondary small"
+                                    onclick="document.getElementById('archivo').click()"
+                                >
+                                    📎 Elegir archivo
+                                </button>
+
+                                <span id="nombreArchivo">
+                                    Ningún archivo seleccionado
+                                </span>
+
+                                <input
+                                    type="file"
+                                    id="archivo"
+                                    accept=".pdf,.png,.jpg,.jpeg,.doc,.docx"
+                                    style="display:none"
+                                >
+
+                            </div>
+
+                        </div>
+
+                        <button
+                            class="btn"
+                            type="submit"
+                        >
+                            Crear ticket
+                        </button>
+
                     </form>
 
                     <p id="mensaje" class="message"></p>
+
                 </article>
 
+                <!-- LISTADO -->
                 <article class="card">
+
                     <div class="card-header">
+
                         <div>
                             <h2>Lista de tickets</h2>
-                            <p>Usa el filtro para encontrar tickets por código, estado o descripción.</p>
+
+                            <p>
+                                Consulta tickets y administra el flujo
+                                de atención.
+                            </p>
                         </div>
+
                     </div>
 
                     <div class="field">
-                        <label for="filtroTickets">Buscar</label>
-                        <input type="search" id="filtroTickets" placeholder="Ej. TK-0001, creado, impresora">
+
+                        <label for="filtroTickets">
+                            Buscar ticket
+                        </label>
+
+                        <input
+                            type="search"
+                            id="filtroTickets"
+                            placeholder="Código, descripción o estado"
+                        >
+
                     </div>
 
                     <div class="table-wrap">
+
                         <table>
+
                             <thead>
-                                <tr>
+
+                                <tr id="encabezadoTabla">
+
                                     <th>Código</th>
                                     <th>Descripción</th>
                                     <th>Estado</th>
                                     <th>Solicitante</th>
+                                    <th>Timeline</th>
                                     <th>Acciones</th>
+
                                 </tr>
+
                             </thead>
+
                             <tbody id="tablaTickets"></tbody>
+
                         </table>
+
                     </div>
+
                 </article>
+
             </section>
+
         </main>
+
     </div>
-    
-	<div id="modalTimeline" class="modal-overlay">
-	    <div class="modal-box">
-	        <div class="modal-header">
-	            <h2 id="modalTitulo">Timeline</h2>
-	            <button class="modal-cerrar" onclick="cerrarModal()">✕</button>
-	        </div>
-	        <div id="modalContenido" class="timeline-lista"></div>
-	    </div>
-	</div>
-	
-	<div id="modalObservacion" class="modal-overlay">
-    <div class="modal-box">
-        <div class="modal-header">
-            <h2 id="modalObsTitulo">Observación</h2>
-            <button class="modal-cerrar" onclick="cerrarModalObs()">✕</button>
-        </div>
-        <div class="form-grid">
-            <div class="field">
-                <label for="inputObservacion">Observación</label>
-                <textarea id="inputObservacion" placeholder="Escribe una observación..."></textarea>
+
+    <!-- MODAL TIMELINE -->
+    <div
+        id="modalTimeline"
+        class="modal-overlay"
+    >
+
+        <div class="modal-box">
+
+            <div class="modal-header">
+
+                <h2 id="modalTitulo">
+                    Timeline
+                </h2>
+
+                <button
+                    class="modal-cerrar"
+                    type="button"
+                    onclick="cerrarModal()"
+                >
+                    ✕
+                </button>
+
             </div>
-            <button class="btn" onclick="confirmarCambioEstado()">Confirmar</button>
+
+            <div
+                id="modalContenido"
+                class="timeline-lista"
+            ></div>
+
         </div>
+
     </div>
-</div>
-	
+
+    <!-- MODAL OBSERVACION -->
+    <div
+        id="modalObservacion"
+        class="modal-overlay"
+    >
+
+        <div class="modal-box">
+
+            <div class="modal-header">
+
+                <h2 id="modalObsTitulo">
+                    Observación
+                </h2>
+
+                <button
+                    class="modal-cerrar"
+                    type="button"
+                    onclick="cerrarModalObs()"
+                >
+                    ✕
+                </button>
+
+            </div>
+
+            <div class="form-grid">
+
+                <div class="field">
+
+                    <label for="inputObservacion">
+                        Observación
+                    </label>
+
+                    <textarea
+                        id="inputObservacion"
+                        rows="5"
+                        placeholder="Escribe una observación..."
+                    ></textarea>
+
+                </div>
+
+                <button
+                    class="btn"
+                    type="button"
+                    onclick="confirmarCambioEstado()"
+                >
+                    Confirmar
+                </button>
+
+            </div>
+
+        </div>
+
+    </div>
+
+    <!-- SCRIPTS -->
     <script src="js/api.js"></script>
     <script src="js/tickets.js"></script>
-    
 
 </body>
 </html>
