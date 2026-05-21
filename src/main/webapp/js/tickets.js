@@ -1,7 +1,5 @@
 let tickets = [];
 
-<<<<<<< HEAD
-=======
 const transiciones = {
     CREADO: ["ASIGNADO", "RECHAZADO"],
     ASIGNADO: ["VALIDACION", "RECHAZADO"],
@@ -237,7 +235,6 @@ async function crearTicket(event) {
     }
 }
 
->>>>>>> e816c040987bb544f78ef5f9946dba4a86f0ce58
 let _pendienteId = null;
 let _pendienteEstado = null;
 
