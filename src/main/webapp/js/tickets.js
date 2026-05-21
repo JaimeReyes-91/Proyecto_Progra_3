@@ -23,14 +23,21 @@ function protegerSesion() {
 }
 
 function prepararNavegacion() {
-    const nombre = localStorage.getItem("nombre") || "Usuario";
-    const rol = localStorage.getItem("rol") || "";
-    const usuarioActivo = document.getElementById("usuarioActivo");
-    const linkUsuarios = document.getElementById("linkUsuarios");
-    const logoutLink = document.getElementById("logoutLink");
+	const nombre = localStorage.getItem("nombre") || "Usuario";
+	const rol = localStorage.getItem("rol") || "";
+	const usuarioActivo = document.getElementById("usuarioActivo");
+	const linkUsuarios = document.getElementById("linkUsuarios");
+	const logoutLink = document.getElementById("logoutLink");
 	const linkDashboard = document.getElementById("linkDashboard");
 
-    usuarioActivo.textContent = `${nombre} · ${rol}`;
+	const iniciales = nombre.split(" ").map(p => p[0]).join("").slice(0, 2).toUpperCase();
+	usuarioActivo.innerHTML = `
+	    <div class="avatar">${iniciales}</div>
+	    <div class="info">
+	        <div class="nombre">${nombre}</div>
+	        <div class="rol">${rol}</div>
+	    </div>
+	`;
 
 	if (rol !== "SOPORTE" && linkUsuarios) {
 	    linkUsuarios.style.display = "none";
