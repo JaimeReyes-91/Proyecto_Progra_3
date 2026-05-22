@@ -96,12 +96,19 @@ function prepararFormulario() {
 async function listarTickets() {
     try {
         const response = await fetch(API_URL + "/tickets");
-
-        if (!response.ok) {
-            throw new Error("No se pudieron cargar los tickets");
-        }
+        if (!response.ok) throw new Error("No se pudieron cargar los tickets");
 
         tickets = await response.json();
+
+        await Promise.all(tickets.map(async ticket => {
+            try {
+                const res = await fetch(`${API_URL}/archivos/ticket/${ticket.id}`);
+                ticket.archivos = res.ok ? await res.json() : [];
+            } catch {
+                ticket.archivos = [];
+            }
+        }));
+
         renderTickets();
     } catch (error) {
         console.error(error);
@@ -116,15 +123,15 @@ function renderTickets() {
 	const rol       = localStorage.getItem("rol");
 	const esSolicitante = rol === "SOLICITANTE";
 	
-	document.querySelector("#tablaTickets").closest("table").querySelector("thead tr").innerHTML = `
-	    <th>Código</th>
-	    <th>Descripción</th>
-	    <th>Estado</th>
-	    ${!esSolicitante ? "<th>Solicitante</th>" : ""}
-	    <th>Timeline</th>
-	    <th>Acciones</th>
-	`;
-
+    document.querySelector("#tablaTickets").closest("table").querySelector("thead tr").innerHTML = `
+        <th>Código</th>
+        <th>Descripción</th>
+        <th>Estado</th>
+        ${!esSolicitante ? "<th>Solicitante</th>" : ""}
+        <th>Timeline</th>
+        <th>Archivo</th>
+        <th>Acciones</th>
+    `;
 	let visibles = tickets.filter(ticket => {
 	    const texto = [
 	        ticket.codigo,
@@ -161,6 +168,18 @@ function renderTickets() {
                    🕓
                </button>
            </td>
+           <td>
+                ${ticket.archivos && ticket.archivos.length
+                    ? ticket.archivos.map(a => `
+                        <a class="btn small secondary"
+                        href="${API_URL}/archivos/download/${a.id}"
+                        target="_blank"
+                        title="${escapar(a.nombreOriginal)}">
+                            📎 ${escapar(a.nombreOriginal)}
+                        </a>`).join("")
+                    : "-"
+                }
+            </td>
            <td>
                <div class="actions">
                    ${botonesEstado(ticket, esSolicitante)}

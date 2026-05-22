@@ -80,33 +80,26 @@ function prepararFiltros() {
 }
 
 async function cargarTickets() {
-
     try {
-
-        const response = await fetch(
-            API_URL + "/tickets"
-        );
-
-        if (!response.ok) {
-
-            throw new Error(
-                "No se pudieron cargar los tickets"
-            );
-
-        }
+        const response = await fetch(API_URL + "/tickets");
+        if (!response.ok) throw new Error("No se pudieron cargar los tickets");
 
         tickets = await response.json();
 
+        await Promise.all(tickets.map(async ticket => {
+            try {
+                const res = await fetch(`${API_URL}/archivos/ticket/${ticket.id}`);
+                ticket.archivos = res.ok ? await res.json() : [];
+            } catch {
+                ticket.archivos = [];
+            }
+        }));
+
         renderTickets();
-
     } catch (error) {
-
         console.error(error);
-
         mostrarMensaje(error.message, "error");
-
     }
-
 }
 
 function renderTickets() {
@@ -210,6 +203,17 @@ function renderTickets() {
 
                 </button>
 
+            </td>
+            <td>
+                ${ticket.archivos && ticket.archivos.length
+                    ? ticket.archivos.map(a => `
+                        <a class="btn small secondary"
+                        href="${API_URL}/archivos/download/${a.id}"
+                        target="_blank">
+                            📎 ${escapar(a.nombreOriginal)}
+                        </a>`).join("")
+                    : "-"
+                }
             </td>
 
             <td class="actions">
