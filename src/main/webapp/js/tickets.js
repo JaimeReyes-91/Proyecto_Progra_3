@@ -259,7 +259,7 @@ function cerrarSesion(event) {
     window.location.href = "login.html";
 }
 
-// — modales (necesarios si se reutilizan desde dashboard) —
+// modales (necesarios se reutilizan desde dashboard) 
 function cerrarModal() {
     document.getElementById("modalTimeline")?.classList.remove("activo");
 }
