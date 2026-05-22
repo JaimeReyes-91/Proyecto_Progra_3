@@ -181,7 +181,7 @@ function renderTickets() {
             </td>
 
             <td>
-                <span class="badge ${ticket.estadoActual}">
+                <span class="badge ${ticket.estadoActual} S">
                     ${formatearEstado(ticket.estadoActual)}
                 </span>
             </td>
@@ -210,7 +210,7 @@ function renderTickets() {
                         <a class="btn small secondary"
                         href="${API_URL}/archivos/download/${a.id}"
                         target="_blank">
-                            📎 ${escapar(a.nombreOriginal)}
+                            <img src="img/carpetas_1.png" alt="Timeline" class="icono-timeline">${escapar("")}
                         </a>`).join("")
                     : "-"
                 }

@@ -184,7 +184,7 @@ function renderTickets() {
 	            <td>${escapar(ticket.codigo || "-")}</td>
 	            <td>${escapar(ticket.descripcion || "-")}</td>
 	            <td>
-	                <span class="badge ${ticket.estadoActual}">
+	                <span class="badge ${ticket.estadoActual} R">
 	                    ${formatearEstado(ticket.estadoActual)}
 	                </span>
 	            </td>

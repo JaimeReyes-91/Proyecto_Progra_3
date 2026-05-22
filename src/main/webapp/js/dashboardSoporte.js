@@ -6,6 +6,8 @@ document.addEventListener("DOMContentLoaded", () => {
 
 });
 
+let usuarios = [];
+
 function protegerSesion() {
 
     const usuarioId = localStorage.getItem("usuarioId");
@@ -79,10 +81,12 @@ async function cargarDashboard() {
 
         const tickets = await response.json();
 
-        const usuarioId = parseInt(
-            localStorage.getItem("usuarioId"),
-            10
-        );
+		const responseUsuarios = await fetch(API_URL + "/usuarios");
+
+		if (responseUsuarios.ok) {
+		    usuarios = await responseUsuarios.json();
+		}
+
 
         // Tickets nuevos para revisión
         const nuevos = tickets.filter(
@@ -92,23 +96,22 @@ async function cargarDashboard() {
         // Tickets asignados al técnico actual
         const asignados = tickets.filter(
             t =>
-                t.estadoActual === "ASIGNADO" &&
-                t.asignadoA === usuarioId
+                t.estadoActual === "ASIGNADO"
         );
 
         // Tickets enviados a validación
         const validacion = tickets.filter(
             t =>
-                t.estadoActual === "VALIDACION" &&
-                t.asignadoA === usuarioId
+                t.estadoActual === "VALIDACION" 
         );
 
         // Tickets devueltos por el solicitante
         const devueltos = tickets.filter(
             t =>
-                t.estadoActual === "DEVUELTO" &&
-                t.asignadoA === usuarioId
+                t.estadoActual === "DEVUELTO" 
+				
         );
+		
 
         document.getElementById("ticketsNuevos").textContent =
             nuevos.length;
@@ -129,6 +132,12 @@ async function cargarDashboard() {
             ...validacion,
             ...devueltos
         ]);
+		
+		const recientes = [...tickets]
+		    .reverse()
+		    .slice(0, 5);
+
+		renderRecientes(recientes);
 
     } catch (error) {
 
@@ -143,6 +152,58 @@ async function cargarDashboard() {
 
 }
 
+function renderRecientes(tickets) {
+
+    const tabla = document.getElementById("tablaRecientes");
+
+    if (!tickets.length) {
+
+        tabla.innerHTML = `
+            <tr>
+                <td colspan="4" class="empty">
+                    No hay actividad reciente.
+                </td>
+            </tr>
+        `;
+
+        return;
+
+    }
+
+    tabla.innerHTML = tickets.map(ticket => `
+
+        <tr>
+
+            <td>${escapar(ticket.codigo)}</td>
+
+            <td>${escapar(ticket.descripcion)}</td>
+
+            <td>
+                <span class="badge ${ticket.estadoActual}">
+                    ${formatearEstado(ticket.estadoActual)}
+                </span>
+            </td>
+
+            <td>
+
+                <button
+                    class="btn small secondary"
+                    onclick="verTimeline(
+                        ${ticket.id},
+                        '${ticket.codigo}'
+                    )"
+                >
+                    🕓
+                </button>
+
+            </td>
+
+        </tr>
+
+    `).join("");
+
+}
+
 function renderTablaNuevos(tickets) {
 
     const tabla = document.getElementById("tablaNuevos");
@@ -151,7 +212,7 @@ function renderTablaNuevos(tickets) {
 
         tabla.innerHTML = `
             <tr>
-                <td colspan="4" class="empty">
+                <td colspan="5" class="empty">
                     No hay tickets nuevos.
                 </td>
             </tr>
@@ -169,25 +230,39 @@ function renderTablaNuevos(tickets) {
 
             <td>${escapar(ticket.descripcion || "-")}</td>
 
-            <td>${escapar(ticket.creadoPorNombre || "Sin nombre")}</td>
+            <td>${escapar(obtenerNombreSolicitante(ticket.creadoPor))}</td>
 
-            <td class="actions">
+			<td>
 
-                <button
-                    class="btn small"
-                    onclick="aceptarTicket(${ticket.id})"
-                >
-                    Aceptar
-                </button>
+			    <button
+			        class="btn small secondary"
+			        onclick="verTimeline(
+			            ${ticket.id},
+			            '${ticket.codigo}'
+			        )"
+			    >
+			        🕓
+			    </button>
 
-                <button
-                    class="btn small danger"
-                    onclick="rechazarTicket(${ticket.id})"
-                >
-                    Rechazar
-                </button>
+			</td>
 
-            </td>
+			<td class="actions">
+
+			    <button
+			        class="btn small"
+			        onclick="aceptarTicket(${ticket.id})"
+			    >
+			        Aceptar
+			    </button>
+
+			    <button
+			        class="btn small danger"
+			        onclick="rechazarTicket(${ticket.id})"
+			    >
+			        Rechazar
+			    </button>
+
+			</td>
 
         </tr>
 
@@ -203,7 +278,7 @@ function renderMisTickets(tickets) {
 
         tabla.innerHTML = `
             <tr>
-                <td colspan="5" class="empty">
+                <td colspan="6" class="empty">
                     No tiene tickets asignados.
                 </td>
             </tr>
@@ -220,20 +295,34 @@ function renderMisTickets(tickets) {
             <td>${escapar(ticket.codigo || "-")}</td>
 
             <td>
-                <span class="badge ${ticket.estadoActual}">
+                <span class="badge ${ticket.estadoActual} S">
                     ${formatearEstado(ticket.estadoActual)}
                 </span>
             </td>
 
             <td>${escapar(ticket.descripcion || "-")}</td>
 
-            <td>${escapar(ticket.creadoPorNombre || "-")}</td>
+            <td>${escapar(obtenerNombreSolicitante(ticket.creadoPor))}</td>
 
-            <td class="actions">
+			<td>
 
-                ${renderAccionTicket(ticket)}
+			    <button
+			        class="btn small secondary"
+			        onclick="verTimeline(
+			            ${ticket.id},
+			            '${ticket.codigo}'
+			        )"
+			    >
+			        <i class="fa-solid fa-clock-rotate-left"></i>
+			    </button>
 
-            </td>
+			</td>
+
+			<td class="actions">
+
+			    ${renderAccionTicket(ticket)}
+
+			</td>
 
         </tr>
 
@@ -461,6 +550,18 @@ function formatearEstado(estado) {
 
 }
 
+function obtenerNombreSolicitante(id) {
+
+    const usuario = usuarios.find(
+        usuario => usuario.id === id
+    );
+
+    return usuario
+        ? usuario.nombre
+        : "Sin nombre";
+
+}
+
 function escapar(valor) {
 
     return String(valor || "")
@@ -479,5 +580,106 @@ function cerrarSesion(event) {
     localStorage.clear();
 
     window.location.href = "login.html";
+
+}
+
+async function verTimeline(ticketId, codigo) {
+
+    try {
+
+        const response = await fetch(
+            `${API_URL}/timeline/${ticketId}`
+        );
+
+        if (!response.ok) {
+
+            throw new Error(
+                "No se pudo cargar el timeline"
+            );
+
+        }
+
+        const eventos = await response.json();
+
+        const contenido = eventos.length
+            ? eventos.map(evento => {
+
+                const fecha =
+                    evento.fechaEvento
+                        ? evento.fechaEvento
+                            .replace("T", " ")
+                            .substring(0, 16)
+                        : "";
+
+                return `
+
+                    <div class="timeline-item">
+
+                        <div class="timeline-dot ${evento.estado}">
+                        </div>
+
+                        <div class="timeline-info">
+
+                            <span class="timeline-fecha">
+                                ${fecha}
+                            </span>
+
+                            <span class="timeline-estado">
+                                ${formatearEstado(
+                                    evento.estado
+                                )}
+                            </span>
+
+                            <span class="timeline-obs">
+                                ${escapar(
+                                    evento.observacion ||
+                                    "Sin observación"
+                                )}
+                            </span>
+
+                        </div>
+
+                    </div>
+
+                `;
+
+            }).join("")
+            : `
+                <p>
+                    No hay eventos registrados.
+                </p>
+            `;
+
+        document.getElementById(
+            "modalTitulo"
+        ).textContent =
+            `Timeline de ${codigo}`;
+
+        document.getElementById(
+            "modalContenido"
+        ).innerHTML = contenido;
+
+        document.getElementById(
+            "modalTimeline"
+        ).style.display = "flex";
+
+    } catch (error) {
+
+        console.error(error);
+
+        mostrarMensaje(
+            error.message,
+            "error"
+        );
+
+    }
+
+}
+
+function cerrarModal() {
+
+    document.getElementById(
+        "modalTimeline"
+    ).style.display = "none";
 
 }

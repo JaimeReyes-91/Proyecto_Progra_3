@@ -185,7 +185,9 @@
                         <th>Código</th>
                         <th>Descripción</th>
                         <th>Solicitante</th>
+                        <th>Timeline</th>
                         <th>Acciones</th>
+                        
 
                     </tr>
 
@@ -226,9 +228,10 @@
                     <tr>
 
                         <th>Código</th>
+                        <th>Descripción</th>                        
                         <th>Estado</th>
-                        <th>Descripción</th>
                         <th>Solicitante</th>
+                        <th>Timeline</th>
                         <th>Acciones</th>
 
                     </tr>
@@ -242,8 +245,77 @@
             </div>
 
         </section>
+		<section class="card">
+	
+	    <div class="card-header">
+	
+	        <div>
+	
+	            <h2>Actividad Reciente</h2>
+	
+	            <p>
+	                Últimos tickets registrados en el sistema.
+	            </p>
+	
+	        </div>
+	
+	    </div>
+	
+	    <div class="table-wrap">
+	
+	        <table>
+	
+	            <thead>
+	
+	                <tr>
+	
+	                    <th>Código</th>
+	                    <th>Descripción</th>
+	                    <th>Estado</th>
+	                    <th>Timeline</th>
+	
+	                </tr>
+	
+	            </thead>
+	
+	            <tbody id="tablaRecientes"></tbody>
+	
+	        </table>
+	
+	    </div>
+	
+	</section>
 
     </main>
+
+</div>
+
+<div class="modal-overlay" id="modalTimeline" style="display:none;">
+
+    <div class="modal-box">
+
+        <div class="modal-header">
+
+            <h2 id="modalTitulo">
+                Timeline
+            </h2>
+
+            <button
+                class="modal-cerrar"
+                onclick="cerrarModal()"
+            >
+                ✕
+            </button>
+
+        </div>
+
+        <div
+            class="timeline-lista"
+            id="modalContenido"
+        >
+        </div>
+
+    </div>
 
 </div>
 
