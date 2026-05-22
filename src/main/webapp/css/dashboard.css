@@ -242,4 +242,17 @@
     justify-content: center;
 }
 
+#errorObservacion {
+    display: none;
+    color: #dc2626;
+    font-size: 13px;
+    margin-top: 4px;
+}
 
+.badge-clickable {
+    cursor: pointer;
+}
+
+.badge-clickable:hover {
+    opacity: 0.8;
+}

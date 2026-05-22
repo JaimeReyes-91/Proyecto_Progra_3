@@ -23,6 +23,18 @@ function prepararNavegacion() {
     const rol    = localStorage.getItem("rol") || "";
 
     const usuarioActivo = document.getElementById("usuarioActivo");
+	
+	document.getElementById("usuarioNombre").textContent = nombre;
+	document.getElementById("usuarioRol").textContent    = rol;
+	
+	const iniciales = nombre
+        .split(" ")
+        .map(p => p[0])
+        .join("")
+        .substring(0, 2)
+        .toUpperCase();
+		
+	document.getElementById("usuarioAvatar").textContent = iniciales;
 
     if (usuarioActivo) {
         usuarioActivo.textContent = `${nombre} · ${rol}`;

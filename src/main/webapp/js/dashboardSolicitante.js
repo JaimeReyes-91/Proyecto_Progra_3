@@ -62,11 +62,23 @@ async function cargarDashboard() {
         const response = await fetch(API_URL + "/tickets");
         if (!response.ok) throw new Error("Error al cargar tickets");
 
+		const [resTickets] = await Promise.all([ fetch(API_URL + "/tickets")]);
+		
         const todos = await response.json();
 
         // Solo los tickets del solicitante actual
         tickets = todos.filter(t => t.creadoPor === usuarioId);
 
+		await Promise.all(tickets.map(async ticket => {
+	        try {
+	            const res    = await fetch(`${API_URL}/timeline/${ticket.id}`);
+	            const eventos = await res.json();
+	            const ultimo  = eventos.filter(e => e.observacion).at(-1);
+	            ticket.ultimaObservacion = ultimo?.observacion || null;
+	        } catch {
+	            ticket.ultimaObservacion = null;
+	        }
+	    }));
         actualizarKPIs();
         mostrarAlertaValidacion();
         renderTickets();
@@ -176,6 +188,14 @@ function renderTickets() {
 	                    ${formatearEstado(ticket.estadoActual)}
 	                </span>
 	            </td>
+				
+				<td class="obs-col">
+		            ${ticket.ultimaObservacion
+		                ? ticket.ultimaObservacion
+		                : `<span style="color:#ccc;">—</span>`
+		            }
+				</td>
+				
 	            <td>
 	                <button
 	                    class="btn small secondary btn-timeline"
@@ -196,7 +216,6 @@ function renderTickets() {
 	}
 
 	// ... (sigue el código con renderAcciones)
-
 
 
 function renderAcciones(ticket) {
@@ -244,8 +263,13 @@ function cambiarEstado(id, estado) {
     _pendienteId    = id;
     _pendienteEstado = estado;
 
+	
+	if (estado === "FINALIZADO") {
+	        confirmarCambioEstado();
+	        return;
+	    }
+		
     const titulos = {
-        FINALIZADO: "Aprobar solución",
         DEVUELTO:   "Devolver ticket"
     };
 
@@ -266,8 +290,10 @@ async function confirmarCambioEstado() {
     const estado      = _pendienteEstado;
 
     if (estado === "DEVUELTO" && !observacion) {
-        mostrarMensaje("Debe indicar el motivo de devolución", "error");
-        return;
+		const error = document.getElementById("errorObservacion");
+	    error.textContent = "Debe indicar el motivo de devolución";
+	    error.style.display = "block";
+	    return;
     }
 
     try {
@@ -370,10 +396,11 @@ function cerrarModal() {
 }
 
 function cerrarModalObs() {
-	document
-	        .getElementById("modalObservacion")
-	        .classList.remove("activo");
+	document.getElementById("modalObservacion")?.classList.remove("activo");
 
+	const error = document.getElementById("errorObservacion");
+	    if (error) error.style.display = "none";
+		
 	    _pendienteId = null;
 	    _pendienteEstado = null;
 }

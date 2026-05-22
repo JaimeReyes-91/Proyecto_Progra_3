@@ -118,6 +118,7 @@
                                 <th>Código</th>
                                 <th>Descripción</th>
                                 <th>Estado</th>
+                                <th>Última observación</th>
                                 <th>Timeline</th>
                                 <th>Acciones</th>
                             </tr>
@@ -171,16 +172,12 @@
 
                 <div class="field">
 
-                    <label for="inputObservacion">
-                        Observación
-                    </label>
-
                     <textarea
                         id="inputObservacion"
                         rows="5"
-                        placeholder="Escribe una observación..."
+                        placeholder="Explique qué no fue solucionado correctamente..."
                     ></textarea>
-
+					<span id="errorObservacion"></span>
                 </div>
 
                 <button
