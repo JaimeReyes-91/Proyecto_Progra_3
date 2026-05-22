@@ -48,6 +48,17 @@ function prepararNavegacion() {
 	        ? "dashboardSolicitante.html"
 	        : "dashboard.html";
 	}
+    const toggleSidebar = document.getElementById("toggleSidebar");
+
+    if (toggleSidebar) {
+        toggleSidebar.addEventListener("click", () => {
+            document
+                .getElementById("sidebar")
+                .classList
+                .toggle("collapsed");
+
+        });
+    }
 	
 	if (localStorage.getItem("rol") === "SOPORTE") {
 	    const formulario = document.getElementById("ticketForm").closest("article");
