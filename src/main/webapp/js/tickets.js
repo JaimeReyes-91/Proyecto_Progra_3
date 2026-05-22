@@ -1,7 +1,5 @@
 let tickets = [];
 
-<<<<<<< HEAD
-=======
 const transiciones = {
     CREADO: ["ASIGNADO", "RECHAZADO"],
     ASIGNADO: ["VALIDACION", "RECHAZADO"],
@@ -50,6 +48,17 @@ function prepararNavegacion() {
 	        ? "dashboardSolicitante.html"
 	        : "dashboard.html";
 	}
+    const toggleSidebar = document.getElementById("toggleSidebar");
+
+    if (toggleSidebar) {
+        toggleSidebar.addEventListener("click", () => {
+            document
+                .getElementById("sidebar")
+                .classList
+                .toggle("collapsed");
+
+        });
+    }
 	
 	if (localStorage.getItem("rol") === "SOPORTE") {
 	    const formulario = document.getElementById("ticketForm").closest("article");
@@ -237,7 +246,6 @@ async function crearTicket(event) {
     }
 }
 
->>>>>>> e816c040987bb544f78ef5f9946dba4a86f0ce58
 let _pendienteId = null;
 let _pendienteEstado = null;
 
