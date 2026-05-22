@@ -10,6 +10,8 @@
 </head>
 <body>
     <div class="app-shell">
+
+        <!-- SIDEBAR -->
         <aside class="sidebar" id="sidebar">
             <div class="brand">
                 <strong class="brand-text">Tickets</strong>
@@ -20,7 +22,7 @@
                     <span class="nav-icon">📊</span>
                     <span class="nav-text">Dashboard</span>
                 </a>
-                <a class="nav-link" href="tickets.html">
+                <a class="nav-link" href="ticketsSolicitante.html">
                     <span class="nav-icon">🎫</span>
                     <span class="nav-text">Tickets</span>
                 </a>
@@ -32,6 +34,8 @@
         </aside>
 
         <main class="main">
+
+            <!-- HEADER -->
             <header class="topbar">
                 <div>
                     <h1>Mis tickets</h1>
@@ -46,6 +50,19 @@
                 </div>
             </header>
 
+            <!-- ALERTA: TICKETS PENDIENTES DE VALIDACIÓN (idea nueva) -->
+            <section id="seccionValidacion" style="display:none" class="card alerta-validacion">
+                <div class="alerta-header">
+                    <span class="alerta-icono">⚠️</span>
+                    <div>
+                        <h2>Tienes tickets esperando tu aprobación</h2>
+                        <p>Revisa y aprueba o devuelve los tickets en estado <strong>VALIDACIÓN</strong>.</p>
+                    </div>
+                </div>
+                <div id="listaValidacion"></div>
+            </section>
+
+            <!-- KPIs -->
             <section class="grid kpis">
                 <article class="kpi">
                     <div class="kpi-icon"><i class="fa-solid fa-ticket"></i></div>
@@ -74,14 +91,26 @@
                 </article>
             </section>
 
+            <!-- TABLA CON BÚSQUEDA + TIMELINE + ACCIONES -->
             <section class="card">
                 <div class="card-header">
                     <div>
-                        <h2>Últimos tickets</h2>
-                        <p>Tus solicitudes más recientes.</p>
+                        <h2>Mis tickets</h2>
+                        <p>Consulta, busca y gestiona tus solicitudes.</p>
                     </div>
-                    <a class="btn secondary" href="tickets.html">Ver tickets</a>
+                    <a class="btn secondary" href="ticketsSolicitante.html">+ Nuevo ticket</a>
                 </div>
+
+                <!-- BUSCADOR -->
+                <div class="field">
+                    <label for="filtroTickets">Buscar ticket</label>
+                    <input
+                        type="search"
+                        id="filtroTickets"
+                        placeholder="Código, descripción o estado..."
+                    >
+                </div>
+
                 <div class="table-wrap">
                     <table>
                         <thead>
@@ -89,13 +118,83 @@
                                 <th>Código</th>
                                 <th>Descripción</th>
                                 <th>Estado</th>
+                                <th>Timeline</th>
+                                <th>Acciones</th>
                             </tr>
                         </thead>
-                        <tbody id="tablaRecientes"></tbody>
+                        <tbody id="tablaTickets"></tbody>
                     </table>
                 </div>
+
+                <p id="mensaje" class="message"></p>
             </section>
+
         </main>
+    </div>
+
+    <!-- MODAL TIMELINE -->
+    <div id="modalTimeline" class="modal-overlay">
+        <div class="modal-box">
+            <div class="modal-header">
+                <h2 id="modalTitulo">Timeline</h2>
+                <button class="modal-cerrar" type="button" onclick="cerrarModal()">✕</button>
+            </div>
+            <div id="modalContenido" class="timeline-lista"></div>
+        </div>
+    </div>
+
+    <!-- MODAL OBSERVACION (para Devolver) -->
+    <div
+        id="modalObservacion"
+        class="modal-overlay"
+    >
+
+        <div class="modal-box">
+
+            <div class="modal-header">
+
+                <h2 id="modalObsTitulo">
+                    Observación
+                </h2>
+
+                <button
+                    class="modal-cerrar"
+                    type="button"
+                    onclick="cerrarModalObs()"
+                >
+                    ✕
+                </button>
+
+            </div>
+
+            <div class="form-grid">
+
+                <div class="field">
+
+                    <label for="inputObservacion">
+                        Observación
+                    </label>
+
+                    <textarea
+                        id="inputObservacion"
+                        rows="5"
+                        placeholder="Escribe una observación..."
+                    ></textarea>
+
+                </div>
+
+                <button
+                    class="btn"
+                    type="button"
+                    onclick="confirmarCambioEstado()"
+                >
+                    Confirmar
+                </button>
+
+            </div>
+
+        </div>
+
     </div>
 
     <script src="js/api.js"></script>
