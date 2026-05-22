@@ -31,10 +31,6 @@ public class TicketRecurso {
     
     private final ArchivoServicio archivoServicio = new ArchivoServicio();
 
-<<<<<<< HEAD
-        private TimeLineDAO timeLineDAO = new TimeLineDAO();
-=======
->>>>>>> 7e790a5c10b03a3f84c3f6700db4717faa703f06
 
     @GET
     public Response listar() {
