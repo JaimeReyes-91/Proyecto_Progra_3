@@ -295,7 +295,7 @@ function renderMisTickets(tickets) {
             <td>${escapar(ticket.codigo || "-")}</td>
 
             <td>
-                <span class="badge ${ticket.estadoActual}">
+                <span class="badge ${ticket.estadoActual} S">
                     ${formatearEstado(ticket.estadoActual)}
                 </span>
             </td>
