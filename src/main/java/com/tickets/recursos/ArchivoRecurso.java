@@ -107,16 +107,18 @@ public class ArchivoRecurso {
                         .build();
             }
 
-            return Response.ok(
-                    new FileInputStream(file)
-            )
-                    .header(
-                            "Content-Disposition",
-                            "attachment; filename=\""
-                                    + archivo.getNombreOriginal()
-                                    + "\""
-                    )
-                    .build();
+             String mimeType = archivo.getMimeType();
+                if (mimeType == null || mimeType.isBlank() || mimeType.equals("application/octet-stream")) {
+                mimeType = java.nio.file.Files.probeContentType(file.toPath());
+                if (mimeType == null) mimeType = "application/octet-stream";
+                }
+
+        return Response.ok(new FileInputStream(file))
+                .type(mimeType)
+                .header("Content-Disposition",
+                        "inline; filename=\"" + archivo.getNombreOriginal() + "\"")
+                .header("Content-Length", file.length())
+                .build();
 
         } catch (Exception e) {
 

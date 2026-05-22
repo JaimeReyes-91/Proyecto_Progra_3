@@ -71,7 +71,7 @@ public class TicketRecurso {
                 archivoServicio.subirArchivo(
                         creado.getId(),
                         archivoInfo.getFileName(),
-                        archivoInfo.getType(),
+                        null,
                         -1,
                         archivoStream
                 );

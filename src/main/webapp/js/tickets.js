@@ -48,22 +48,159 @@ function prepararNavegacion() {
 
 function prepararFormulario() {
     const creadoPor = document.getElementById("creadoPor");
-    if (creadoPor) {
-        creadoPor.value = localStorage.getItem("usuarioId") || "";
-    }
+    const filtro = document.getElementById("filtroTickets");
 
-    const ticketForm = document.getElementById("ticketForm");
-    if (ticketForm) {
-        ticketForm.addEventListener("submit", crearTicket);
-    }
+	if (localStorage.getItem("rol") === "SOLICITANTE") {
+	    document.getElementById("creadoPorField").style.display = "none";
+	}
+	
+	if (localStorage.getItem("rol") === "SOPORTE") {
+	    document.getElementById("ticketForm").closest("article").style.display = "none";
+	}
+	
+    creadoPor.value = usuarioId || "";
 
-    const archivo = document.getElementById("archivo");
-    if (archivo) {
-        archivo.addEventListener("change", function () {
-            const nombre = this.files[0]?.name || "Ningún archivo seleccionado";
-            document.getElementById("nombreArchivo").textContent = nombre;
-        });
+    document.getElementById("ticketForm").addEventListener("submit", crearTicket);
+    filtro.addEventListener("input", renderTickets);
+	
+	document.getElementById("archivo").addEventListener("change", function () {
+        const nombre = this.files[0]?.name || "Ningún archivo seleccionado";
+        document.getElementById("nombreArchivo").textContent = nombre;
+    });
+}
+
+async function listarTickets() {
+    try {
+        const response = await fetch(API_URL + "/tickets");
+        if (!response.ok) throw new Error("No se pudieron cargar los tickets");
+
+        tickets = await response.json();
+
+        await Promise.all(tickets.map(async ticket => {
+            try {
+                const res = await fetch(`${API_URL}/archivos/ticket/${ticket.id}`);
+                ticket.archivos = res.ok ? await res.json() : [];
+            } catch {
+                ticket.archivos = [];
+            }
+        }));
+
+        renderTickets();
+    } catch (error) {
+        console.error(error);
+        mostrarMensaje("No se pudo conectar con tickets", "error");
     }
+}
+
+function renderTickets() {
+	const tabla    = document.getElementById("tablaTickets");
+	const filtro   = document.getElementById("filtroTickets").value.trim().toLowerCase();
+	const usuarioId = parseInt(localStorage.getItem("usuarioId"), 10);
+	const rol       = localStorage.getItem("rol");
+	const esSolicitante = rol === "SOLICITANTE";
+	
+    document.querySelector("#tablaTickets").closest("table").querySelector("thead tr").innerHTML = `
+        <th>Código</th>
+        <th>Descripción</th>
+        <th>Estado</th>
+        ${!esSolicitante ? "<th>Solicitante</th>" : ""}
+        <th>Timeline</th>
+        <th>Archivo</th>
+        <th>Acciones</th>
+    `;
+	let visibles = tickets.filter(ticket => {
+	    const texto = [
+	        ticket.codigo,
+	        ticket.descripcion,
+	        ticket.estadoActual,
+	        ticket.creadoPor
+	    ].join(" ").toLowerCase();
+
+	    const coincideFiltro = texto.includes(filtro);
+
+	    // Solicitante solo ve sus propios tickets
+	    const esSuyo = !esSolicitante || ticket.creadoPor === usuarioId;
+
+	    return coincideFiltro && esSuyo;
+	});
+
+	if (!visibles.length) {
+	    tabla.innerHTML = `<tr><td class="empty" colspan="5">No hay tickets para mostrar.</td></tr>`;
+	    return;
+	}
+
+	tabla.innerHTML = visibles.map(ticket => `
+		<tr>
+           <td>${escapar(ticket.codigo || "-")}</td>
+           <td>${escapar(ticket.descripcion || "-")}</td>
+           <td>
+               <span class="badge ${ticket.estadoActual}">
+                   ${formatearEstado(ticket.estadoActual)}
+               </span>
+           </td>
+           ${!esSolicitante ? `<td>${ticket.creadoPor || "-"}</td>` : ""}
+           <td>
+               <button class="btn small secondary" type="button" onclick="verTimeline(${ticket.id}, '${escapar(ticket.codigo)}')">
+                   🕓
+               </button>
+           </td>
+           <td>
+                ${ticket.archivos && ticket.archivos.length
+                    ? ticket.archivos.map(a => `
+                        <a class="btn small secondary"
+                        href="${API_URL}/archivos/download/${a.id}"
+                        target="_blank"
+                        title="${escapar(a.nombreOriginal)}">
+                            📎 ${escapar(a.nombreOriginal)}
+                        </a>`).join("")
+                    : "-"
+                }
+            </td>
+           <td>
+               <div class="actions">
+                   ${botonesEstado(ticket, esSolicitante)}
+                   ${!esSolicitante || ticket.estadoActual === "CREADO"
+                       ? `<button class="btn small icon" type="button" onclick="eliminarTicket(${ticket.id})" title="Eliminar">🗑️</button>`
+                       : ""}
+               </div>
+           </td>
+        </tr>
+	`).join("");
+}
+
+function botonesEstado(ticket, esSolicitante) {
+	if (esSolicitante) {
+	    // El solicitante SOLO actúa cuando está en VALIDACION
+	    if (ticket.estadoActual === "VALIDACION") {
+	        return `
+	            <button class="btn small secondary" type="button" onclick="cambiarEstado(${ticket.id}, 'FINALIZADO')">Aprobar</button>
+	            <button class="btn small secondary" type="button" onclick="cambiarEstado(${ticket.id}, 'DEVUELTO')">Rechazar</button>
+	        `;
+	    }
+	    return "";
+	}
+
+	// Técnico/admin: flujo completo
+	const transiciones = {
+	    CREADO:     ["ASIGNADO", "RECHAZADO"],
+	    ASIGNADO:   ["VALIDACION"],
+	    VALIDACION: [],
+	    DEVUELTO:   ["VALIDACION"],
+	    FINALIZADO: [],
+	    RECHAZADO:  []
+	};
+	
+	const etiquetas = {
+	    ASIGNADO:   "Aceptar",
+	    RECHAZADO:  "Rechazar",
+	    VALIDACION: "Enviar a Validación"
+	};
+
+	return (transiciones[ticket.estadoActual] || []).map(estado => `
+	    <button class="btn small secondary" type="button" onclick="cambiarEstado(${ticket.id}, '${estado}')">
+	        ${etiquetas[estado] || estado}
+	    </button>
+	`).join("");
 }
 
 async function crearTicket(event) {
