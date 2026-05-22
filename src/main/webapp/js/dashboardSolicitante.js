@@ -1,4 +1,5 @@
 let tickets = [];
+let mapaUsuarios = {};
 let _pendienteId    = null;
 let _pendienteEstado = null;
 
@@ -59,12 +60,18 @@ async function cargarDashboard() {
     const usuarioId = parseInt(localStorage.getItem("usuarioId"), 10);
 
     try {
-        const response = await fetch(API_URL + "/tickets");
-        if (!response.ok) throw new Error("Error al cargar tickets");
+		const [resTickets, resUsuarios] = await Promise.all([
+            fetch(API_URL + "/tickets"),
+            fetch(API_URL + "/usuarios")
+        ]);
 
-		const [resTickets] = await Promise.all([ fetch(API_URL + "/tickets")]);
+        if (!resTickets.ok) throw new Error("Error al cargar tickets");
+
+        const todos    = await resTickets.json();
+        const usuarios = await resUsuarios.json();
 		
-        const todos = await response.json();
+		mapaUsuarios = {};
+		usuarios.forEach(u => mapaUsuarios[u.id] = u.nombre);
 
         // Solo los tickets del solicitante actual
         tickets = todos.filter(t => t.creadoPor === usuarioId);
@@ -364,6 +371,7 @@ async function verTimeline(ticketId, codigo) {
                 const fecha = evento.fechaEvento
                     ? evento.fechaEvento.replace("T", " ").substring(0, 16)
                     : "";
+				const nombreActor = mapaUsuarios[evento.actorId] || `Usuario ${evento.actorId}`;
 
                 return `
                     <div class="timeline-item">
@@ -371,7 +379,7 @@ async function verTimeline(ticketId, codigo) {
                         <div class="timeline-info">
                             <span class="timeline-fecha">${fecha}</span>
                             <span class="timeline-estado">${formatearEstado(evento.estado)}</span>
-                            <span class="timeline-obs">${escapar(evento.observacion || "Sin observación")}</span>
+                            <span class="timeline-obs">${nombreActor} — ${escapar(evento.observacion || "Sin observación")}</span>
                         </div>
                     </div>
                 `;
