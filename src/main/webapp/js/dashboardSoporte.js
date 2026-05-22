@@ -53,9 +53,7 @@ function prepararNavegacion() {
     const toggleSidebar = document.getElementById("toggleSidebar");
 
     if (toggleSidebar) {
-
         toggleSidebar.addEventListener("click", () => {
-
             document
                 .getElementById("sidebar")
                 .classList

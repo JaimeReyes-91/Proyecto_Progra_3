@@ -20,11 +20,25 @@ function prepararNavegacion() {
     const iniciales = nombre.split(" ").map(p => p[0]).join("").slice(0, 2).toUpperCase();
     document.getElementById("usuarioAvatar").textContent = iniciales;
 
+    const toggleSidebar = document.getElementById("toggleSidebar");
+
+    if (toggleSidebar) {
+        toggleSidebar.addEventListener("click", () => {
+            document
+                .getElementById("sidebar")
+                .classList
+                .toggle("collapsed");
+
+        });
+
+    }
+
     document.getElementById("logoutLink").addEventListener("click", (e) => {
         e.preventDefault();
         localStorage.clear();
         window.location.href = "login.html";
     });
+
 }
 
 async function cargarDashboard() {
