@@ -1,5 +1,10 @@
+//lista para guardar los tickets del solicitante actual
 let tickets = [];
+
+//Relacion de id usuario con su nombre
 let mapaUsuarios = {};
+
+// Variables temporales para guardar el ticket y el estado que se va a cambiar
 let _pendienteId    = null;
 let _pendienteEstado = null;
 
@@ -21,6 +26,8 @@ function protegerSesion() {
         return;
     }
 
+	
+	//verificar, si el usuario no es solicitante lo redirige al dashboard de soporte
     if (rol !== "SOLICITANTE") {
         window.location.href = "dashboardSoporte.html";
     }
@@ -59,6 +66,8 @@ function prepararNavegacion() {
 async function cargarDashboard() {
     const usuarioId = parseInt(localStorage.getItem("usuarioId"), 10);
 
+	
+	//cargar los tickets y usuarios desde el backend
     try {
 		const [resTickets, resUsuarios] = await Promise.all([
             fetch(API_URL + "/tickets"),
@@ -76,6 +85,8 @@ async function cargarDashboard() {
         // Solo los tickets del solicitante actual
         tickets = todos.filter(t => t.creadoPor === usuarioId);
 
+		
+		//obtener la ultima observacion de cada ticket para mostrar en la tabla
 		await Promise.all(tickets.map(async ticket => {
 	        try {
 	            const res    = await fetch(`${API_URL}/timeline/${ticket.id}`);
@@ -163,6 +174,8 @@ function renderTickets() {
     const tabla  = document.getElementById("tablaTickets");
     const filtro = document.getElementById("filtroTickets").value.trim().toLowerCase();
 
+	
+	//filtro de busqueda
     const visibles = tickets.filter(ticket => {
         const texto = [
             ticket.codigo,
@@ -173,6 +186,7 @@ function renderTickets() {
         return texto.includes(filtro);
     });
 
+	//Si no hay resultados solo muestra un mensaje
     if (!visibles.length) {
         tabla.innerHTML = `
             <tr>
@@ -184,7 +198,7 @@ function renderTickets() {
         return;
     }
 
-	// ... (código anterior de la función renderTickets)
+	// Generar una fila para cada ticket visible, ultima observacion, timeline y acciones disponibles
 
 	    tabla.innerHTML = visibles.map(ticket => `
 	        <tr>
@@ -227,7 +241,7 @@ function renderTickets() {
 
 function renderAcciones(ticket) {
 
-    // En VALIDACION: puede Aprobar o Devolver
+    // Cuando se encuentra en VALIDACION: puede aprobar o devolver
     if (ticket.estadoActual === "VALIDACION") {
         return `
             <button
@@ -259,7 +273,8 @@ function renderAcciones(ticket) {
             </button>
         `;
     }
-
+	
+	//Para el solicitante los demas estados no tienen acciones disponibles
     return `<span class="text-muted">Sin acciones</span>`;
 }
 
@@ -270,12 +285,13 @@ function cambiarEstado(id, estado) {
     _pendienteId    = id;
     _pendienteEstado = estado;
 
-	
+	//Finalizado no requiere una observacion
 	if (estado === "FINALIZADO") {
 	        confirmarCambioEstado();
 	        return;
 	    }
-		
+	
+	//Para mostrar el modal con su titulo correspondiente	
     const titulos = {
         DEVUELTO:   "Devolver ticket"
     };
@@ -296,6 +312,7 @@ async function confirmarCambioEstado() {
     const id          = _pendienteId;
     const estado      = _pendienteEstado;
 
+	//Al devolver exige una observacion con el motivo de devolucion]
     if (estado === "DEVUELTO" && !observacion) {
 		const error = document.getElementById("errorObservacion");
 	    error.textContent = "Debe indicar el motivo de devolución";
@@ -303,6 +320,7 @@ async function confirmarCambioEstado() {
 	    return;
     }
 
+	//Para enviar la petición PUT al backend con el nuevo estado y el actor que realiza el cambio
     try {
         const response = await fetch(
             `${API_URL}/tickets/${id}/${estado}/${actorId}`,
@@ -335,6 +353,7 @@ async function confirmarCambioEstado() {
 // ELIMINAR
 // ─────────────────────────────────────────
 async function eliminarTicket(id) {
+	//Confirmar la acción de eliminar o cancelar
     const confirmar = confirm("¿Desea eliminar este ticket?");
     if (!confirmar) return;
 

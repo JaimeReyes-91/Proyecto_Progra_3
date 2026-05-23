@@ -40,6 +40,18 @@
     flex-shrink: 0;
 }
 
+.kpis-4 {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 1rem;
+}
+
+.kpis-5 {
+    display: grid;
+    grid-template-columns: repeat(5, 1fr);
+    gap: 1rem;
+}
+
 /* Modal */
 .modal-overlay {
     display: none; /* oculto por defecto */
