@@ -1,11 +1,16 @@
+
+//Se ejecutan las funciones iniciales de esta pantalla
 document.addEventListener("DOMContentLoaded", () => {
     document.getElementById("usuarioForm").addEventListener("submit", guardarUsuario);
     document.getElementById("cancelarEdicion").addEventListener("click", limpiarFormulario);
 });
 
+
+//Sirve para registrar un nuevo usuario en el sistema
 async function guardarUsuario(event) {
     event.preventDefault();
-
+	
+	//Se crea un objeto con los datos ingresados en el formulario
     const usuario = {
         nombre: document.getElementById("nombre").value.trim(),
         correo: document.getElementById("correo").value.trim(),
@@ -17,6 +22,8 @@ async function guardarUsuario(event) {
     mostrarMensaje("", "");
 
     try {
+		
+		//Envía los datos del usuario al backend mediante una petición POST
         const response = await fetch(API_URL + "/usuarios", {
             method: "POST",
             headers: { "Content-Type": "application/json" },
@@ -42,12 +49,14 @@ async function guardarUsuario(event) {
     }
 }
 
+//Reinicia el formulario y deja el título listo para crear un nuevo registro
 function limpiarFormulario() {
     document.getElementById("usuarioForm").reset();
     document.getElementById("usuarioId").value = "";
     document.getElementById("tituloFormulario").textContent = "Crear Usuario";
 }
 
+//Muestra mensajes de éxito o error
 function mostrarMensaje(texto, tipo) {
     const mensaje = document.getElementById("mensaje");
     mensaje.textContent = texto;
