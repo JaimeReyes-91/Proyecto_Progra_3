@@ -1,18 +1,22 @@
+// Almacena todos los tickets cargados desde la API
 let tickets      = [];
 let mapaUsuarios = {};
 let ticketPendiente  = null;
 let estadoPendiente  = null;
 
+/// Evento que se ejecuta cuando la página termina de cargar.
 document.addEventListener("DOMContentLoaded", () => {
-    protegerSesion();
-    prepararNavegacion();
-    prepararFiltros();
-    cargarTickets();
+    protegerSesion(); // Verifica que el usuario tenga sesión activa y rol correcto
+    prepararNavegacion(); // Pinta el nombre/rol en la barra lateral y enlaza eventos de UI
+    prepararFiltros(); // Enlaza los controles de búsqueda y filtro
+    cargarTickets(); // Obtiene tickets y usuarios desde la API
 });
 
-// ─────────────────────────────────────────
+
 // SESIÓN
-// ─────────────────────────────────────────
+
+//Verifica que exista una sesion valida de rol SOPORTE
+
 function protegerSesion() {
     const usuarioId = localStorage.getItem("usuarioId");
     const rol       = localStorage.getItem("rol");
@@ -27,9 +31,10 @@ function protegerSesion() {
     }
 }
 
-// ─────────────────────────────────────────
+
 // NAVEGACIÓN
-// ─────────────────────────────────────────
+
+// Configura la barra lateral con los datos del usuario en sesion y enlaza tambien el boton colapsado para expandir/cerrar la barra
 function prepararNavegacion() {
     const nombre = localStorage.getItem("nombre") || "Usuario";
     const rol    = localStorage.getItem("rol") || "";
@@ -37,6 +42,7 @@ function prepararNavegacion() {
     document.getElementById("usuarioNombre").textContent = nombre;
     document.getElementById("usuarioRol").textContent    = rol;
 
+    // Aqui genera la iniciales de cada letra del nombre del usuario
     const iniciales = nombre
         .split(" ")
         .map(p => p[0])
@@ -57,17 +63,20 @@ function prepararNavegacion() {
         });
 }
 
-// ─────────────────────────────────────────
+
 // FILTROS
-// ─────────────────────────────────────────
+
+// Aqui se Realizan los filtros de busquedas de los tickets
+// Cada vez que se escriba o cambie el estado, se actualiza la tabla
 function prepararFiltros() {
     document.getElementById("filtroTexto").addEventListener("input",  renderTickets);
     document.getElementById("filtroEstado").addEventListener("change", renderTickets);
 }
 
-// ─────────────────────────────────────────
+
 // CARGA PRINCIPAL
-// ─────────────────────────────────────────
+
+// Aqui carga la informacion de la pantalla principar y obtener los ticket y usuarios del backend
 async function cargarTickets() {
     try {
         const [resTickets, resUsuarios] = await Promise.all([
@@ -77,9 +86,10 @@ async function cargarTickets() {
 
         if (!resTickets.ok) throw new Error("No se pudieron cargar los tickets");
 
+         // Convierte la respuesta de tickets a formato JSON
         tickets = await resTickets.json();
 
-        // Construye el mapa id → nombre para resolver solicitantes
+        // Si los usuarios se cargaron correctamente, se crea un mapa id → nombre
         if (resUsuarios.ok) {
             const usuarios = await resUsuarios.json();
             mapaUsuarios   = {};
@@ -96,6 +106,7 @@ async function cargarTickets() {
             }
         }));
 
+        //Muesta los tickets en la tabla
         renderTickets();
 
     } catch (error) {
@@ -104,15 +115,18 @@ async function cargarTickets() {
     }
 }
 
-// ─────────────────────────────────────────
+
 // TABLA
-// ─────────────────────────────────────────
+
+
+// Dibuja la tabla de tickets en pantalla, aplicando los filtros de texto, estado y visibilidad segun el tecnico
 function renderTickets() {
     const tabla       = document.getElementById("tablaTickets");
     const filtroTexto = document.getElementById("filtroTexto").value.trim().toLowerCase();
     const filtroEstado = document.getElementById("filtroEstado").value;
     const usuarioId   = parseInt(localStorage.getItem("usuarioId"), 10);
 
+    // Filtra los tickets
     const visibles = tickets.filter(ticket => {
 
         const texto = `
@@ -124,7 +138,7 @@ function renderTickets() {
         const coincideTexto  = texto.includes(filtroTexto);
         const coincideEstado = !filtroEstado || ticket.estadoActual === filtroEstado;
 
-        // CREADO visible para todos; el resto solo si está asignado al técnico actual
+        //  Los tickets CREADO son visibles para todos los técnicos del soporte. y los demas solo del tecnico asignado
         const visible =
             ticket.estadoActual === "CREADO" ||
             (
@@ -141,6 +155,7 @@ function renderTickets() {
         return coincideTexto && coincideEstado && visible;
     });
 
+    // Si no hay tickets visibles o disponibles, este mensaje se muestra por defecto
     if (!visibles.length) {
         tabla.innerHTML = `
             <tr>
@@ -152,6 +167,8 @@ function renderTickets() {
         return;
     }
 
+
+    // Construye las filas de HTML de la tabla con los tickets existentes
     tabla.innerHTML = visibles.map(ticket => `
         <tr>
             <td>${escapar(ticket.codigo)}</td>
@@ -195,9 +212,10 @@ function renderTickets() {
     `).join("");
 }
 
-// ─────────────────────────────────────────
+
 // ACCIONES POR ESTADO
-// ─────────────────────────────────────────
+
+// Devuelve los botones de accion disponibles segun el estado del ticket
 function renderAcciones(ticket) {
     switch (ticket.estadoActual) {
 
@@ -234,9 +252,11 @@ function renderAcciones(ticket) {
     }
 }
 
-// ─────────────────────────────────────────
+
 // CAMBIO DE ESTADO (con modal de observación)
-// ─────────────────────────────────────────
+
+
+// Realiza los cambios de estados de un ticket
 function abrirModalEstado(id, estado) {
     ticketPendiente  = id;
     estadoPendiente  = estado;
@@ -247,6 +267,7 @@ function abrirModalEstado(id, estado) {
         return;
     }
 	
+    // Títulos personalizados para el modal según el estado
     const titulos = {
         RECHAZADO:  "Rechazar ticket",
         VALIDACION: "Enviar a validación"
@@ -257,10 +278,12 @@ function abrirModalEstado(id, estado) {
     document.getElementById("modalObservacion").classList.add("activo");
 }
 
+
+// Confirma el cambio de estado del ticket le envia una peticion PUT al backend con el estado nuevo y la observacion
 async function confirmarCambioEstado() {
 	const observacion = document.getElementById("inputObservacion").value.trim();
 
-    // Solo RECHAZADO exige observación; VALIDACION la acepta pero no la requiere
+    // Si el ticket se rechaza, la observación es obligatoria
     if (estadoPendiente === "RECHAZADO" && !observacion) {
         mostrarMensaje("Debe ingresar el motivo del rechazo", "error");
         return;
@@ -286,6 +309,8 @@ async function confirmarCambioEstado() {
 
         cerrarModalObs();
         mostrarMensaje("Estado actualizado correctamente", "ok");
+
+        // Recarga los tickets para mostrar la información actualizada
         await cargarTickets();
 
     } catch (error) {
@@ -294,9 +319,11 @@ async function confirmarCambioEstado() {
     }
 }
 
-// ─────────────────────────────────────────
+
 // TIMELINE
-// ─────────────────────────────────────────
+
+//Carga y muestra la linea de tiempo del ticket, mostrando los cambios de estado y observaciones registradas
+
 async function verTimeline(ticketId, codigo) {
 	try {
         const response = await fetch(`${API_URL}/timeline/${ticketId}`);
@@ -307,6 +334,7 @@ async function verTimeline(ticketId, codigo) {
 
         document.getElementById("modalTitulo").textContent = `Timeline - ${codigo}`;
 
+          // Si hay eventos, los muestra; si no, muestra un mensaje vacío
         document.getElementById("modalContenido").innerHTML = eventos.length
             ? eventos.map(e => {
                 const nombreActor = mapaUsuarios[e.actorId] || `Usuario ${e.actorId}`;
@@ -321,6 +349,7 @@ async function verTimeline(ticketId, codigo) {
                     </div>
                 `;
             }).join("")
+            // este seria el mensaje vacio
             : `<p class="empty">No hay eventos registrados.</p>`;
 
         document.getElementById("modalTimeline").classList.add("activo");
@@ -331,41 +360,47 @@ async function verTimeline(ticketId, codigo) {
     }
 }
 
-// ─────────────────────────────────────────
+
 // MODALES
-// ─────────────────────────────────────────
+//Cierra el modal donde se muestra la línea de tiempo.
 function cerrarModal() {
     document.getElementById("modalTimeline")?.classList.remove("activo");
 }
 
+//Cierra el modal de observación y limpia las variables temporales.
 function cerrarModalObs() {
     document.getElementById("modalObservacion")?.classList.remove("activo");
     ticketPendiente = null;
     estadoPendiente = null;
 }
 
-// ─────────────────────────────────────────
+
 // UTILIDADES
-// ─────────────────────────────────────────
+
+//  Muestra un mensaje visual en pantalla.
 function mostrarMensaje(texto, tipo) {
     const mensaje = document.getElementById("mensaje");
     mensaje.textContent = texto;
     mensaje.className   = texto ? `message show ${tipo}` : "message";
 }
 
+//Obtiene el nombre del solicitante usando su ID.
 function obtenerNombreSolicitante(id) {
     return mapaUsuarios[id] || "Sin nombre";
 }
 
+// Formatea la fecha para que se vea más limpia en pantalla.
 function formatearFecha(fecha) {
     if (!fecha) return "";
     return fecha.replace("T", " ").substring(0, 16);
 }
 
+//  Formatea el estado del ticket para mostrarlo en texto.
 function formatearEstado(estado) {
     return String(estado || "").replaceAll("_", " ");
 }
 
+//Escapa caracteres especiales para evitar que se inserte HTML peligroso.
 function escapar(valor) {
     return String(valor || "")
         .replaceAll("&",  "&amp;")
@@ -375,6 +410,7 @@ function escapar(valor) {
         .replaceAll("'",  "&#039;");
 }
 
+//Cierra la sesión del usuario.  Limpia el localStorage y redirige al login.
 function cerrarSesion(event) {
     event.preventDefault();
     localStorage.clear();
