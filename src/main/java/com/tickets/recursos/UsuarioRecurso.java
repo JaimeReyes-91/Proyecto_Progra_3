@@ -16,6 +16,8 @@ import jakarta.ws.rs.Produces;
 import jakarta.ws.rs.core.MediaType;
 import jakarta.ws.rs.core.Response;
 
+// sirve para administar los usuarios del sistema
+
 @Path("/usuarios")
 @Produces(MediaType.APPLICATION_JSON)
 @Consumes(MediaType.APPLICATION_JSON)
@@ -24,6 +26,7 @@ public class UsuarioRecurso {
     private final UsuarioServicio usuarioServicio =
             new UsuarioServicio();
 
+        // Permiter listar los usuarios
     @GET
     public Response listar()
     {
@@ -47,6 +50,7 @@ public class UsuarioRecurso {
         }
     }
 
+    // permite crear al usuario
     @POST
     public Response crear(
             Usuario usuario
@@ -80,6 +84,7 @@ public class UsuarioRecurso {
         }
     }
 
+    // permita actualizar al usuario
     @PUT
     @Path("/{id}")
     public Response actualizar(
@@ -116,6 +121,7 @@ public class UsuarioRecurso {
         }
     }
 
+    // permite eliminar al usuario
     @DELETE
     @Path("/{id}")
     public Response eliminar(

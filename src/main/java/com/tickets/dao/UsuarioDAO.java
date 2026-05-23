@@ -1,5 +1,8 @@
 package com.tickets.dao;
 
+/* En usuariosDAO majeamos el tema de los usuarios 
+con la base de datos */
+
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -11,6 +14,7 @@ import com.tickets.util.ConexionDB;
 
 public class UsuarioDAO {
 
+        // Crea el usuario en la base de datos
     public void insertar(
             Usuario usuario
     ) throws Exception {
@@ -64,6 +68,7 @@ public class UsuarioDAO {
         }
     }
 
+    // En lista los usuarios de la base de datos
     public List<Usuario> listar()
             throws Exception {
 
@@ -125,6 +130,8 @@ public class UsuarioDAO {
 
         return lista;
     }
+
+    // busca al usuario por us id
 
     public Usuario buscarPorId(
             Integer id
@@ -189,6 +196,7 @@ public class UsuarioDAO {
         return null;
     }
 
+    // busca al usuario por su correo 
     public Usuario buscarPorCorreo(
             String correo
     ) throws Exception {
@@ -252,6 +260,8 @@ public class UsuarioDAO {
         return null;
     }
 
+    // Actualiza al usuario con nuevos datos de la base de datos.
+
     public void actualizar(
             Integer id,
             Usuario usuario
@@ -306,6 +316,8 @@ public class UsuarioDAO {
             ps.executeUpdate();
         }
     }
+
+    // Elimina al usuario de la base de datos.
 
     public void eliminar(
             Integer id

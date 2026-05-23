@@ -1,6 +1,6 @@
 package com.tickets.modelo;
 
-//import java.time.LocalDateTime;
+// es el modelo que representa la linea de tiempo de un ticket.
 public class LineaTiempoEvento {
 
 	private int id;

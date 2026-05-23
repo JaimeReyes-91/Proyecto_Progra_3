@@ -1,5 +1,7 @@
 package com.tickets.modelo;
 
+// es el modelo que representa un ticket.
+
 public class Ticket {
 
 	private int id;

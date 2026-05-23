@@ -5,6 +5,8 @@ import java.util.List;
 import com.tickets.dao.TimeLineDAO;
 import com.tickets.modelo.LineaTiempoEvento;
 
+// Es la que gestiona los eventos registrado de los tickets
+
 public class TimeLineServicio {
 
 	private final TimeLineDAO dao = new TimeLineDAO();

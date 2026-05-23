@@ -7,6 +7,8 @@ import com.tickets.modelo.EstadoTicket;
 import com.tickets.modelo.Ticket;
 import com.tickets.util.CodigoTicketUtil;
 
+// El archivo de ticketServicio es la encargadar de la logica de los tickets
+
 public class TicketServicio {
 
 	private final TicketDAO ticketDAO = new TicketDAO();

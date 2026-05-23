@@ -1,5 +1,8 @@
 package com.tickets.dao;
 
+/* En el tomelineDAO manejamos los eventos de cada ticket lo 
+guardamos y consultamos dentro de la base de datos */
+
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -12,6 +15,7 @@ import com.tickets.util.ConexionDB;
 
 public class TimeLineDAO {
 
+	// registra los eventos del historial del ticket
 	public void registrar(LineaTiempoEvento timeline) throws Exception {
 
 		String sql = """
@@ -34,6 +38,7 @@ public class TimeLineDAO {
 	}
 
 	
+	// En lista la linea de tiempo de un ticket con el id
 	public List<LineaTiempoEvento> listarPorTicket(int ticketId) throws Exception {
 
 		List<LineaTiempoEvento> lista = new ArrayList<>();

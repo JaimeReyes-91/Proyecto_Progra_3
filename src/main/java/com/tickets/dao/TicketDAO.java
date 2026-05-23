@@ -1,5 +1,8 @@
 package com.tickets.dao;
 
+/*En esta clase gestionamos las operaciones con la base de datos
+de los ticket */
+
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -13,6 +16,7 @@ import com.tickets.util.ConexionDB;
 
 public class TicketDAO {
 
+	// crea tickets
 	public int crear(Ticket ticket) throws Exception {
 
 		String sql = """
@@ -46,6 +50,7 @@ public class TicketDAO {
 		}
 	}
 
+	// obtiene los siguiente tickets por id
 	public int obtenerSiguienteId() throws Exception {
 
 		String sql = "SELECT nextval(pg_get_serial_sequence('tickets', 'id'))";
@@ -62,6 +67,7 @@ public class TicketDAO {
 		}
 	}
 
+	// busca los ticket por id
 	public Ticket buscarPorId(int id) throws Exception {
 
 		String sql = "SELECT * FROM tickets WHERE id = ?";
@@ -81,6 +87,8 @@ public class TicketDAO {
 		return null;
 	}
 
+	// en lista los todos los tickets
+
 	public List<Ticket> listar() throws Exception {
 
 		List<Ticket> lista = new ArrayList<>();
@@ -99,6 +107,7 @@ public class TicketDAO {
 		return lista;
 	}
 
+	// Actualiza el estado actual de un ticket
 	public void actualizarEstado(int id, EstadoTicket estado) throws Exception {
 
 		String sql = """
@@ -115,6 +124,7 @@ public class TicketDAO {
 		}
 	}
 
+	// En este actualiza el estado y tambien el uuario del ticket
 	public void actualizarEstado(int id, EstadoTicket estado, Integer asignadoA) throws Exception {
 
 		String sql = """
@@ -133,6 +143,7 @@ public class TicketDAO {
 		}
 	}
 
+	// Esta funcion elimina los ticket por medio del id
 	public void eliminar(int id) throws Exception {
 
 		String sql = "DELETE FROM tickets WHERE id = ?";
@@ -144,6 +155,7 @@ public class TicketDAO {
 		}
 	}
 
+	// Esta funcion lo que hace es armar un objeto para usar con la base de datos de ticket
 	private Ticket mapearTicket(ResultSet rs) throws Exception {
 
 		Ticket ticket = new Ticket();

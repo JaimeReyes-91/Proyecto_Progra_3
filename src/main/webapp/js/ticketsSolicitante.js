@@ -113,7 +113,7 @@ async function crearTicket(event) {
         document.getElementById("nombreArchivo").textContent = "Ningún archivo seleccionado";
         document.getElementById("creadoPor").value = localStorage.getItem("usuarioId") || "";
 
-        mostrarMensaje("✅ Ticket creado correctamente", "ok");
+        mostrarMensaje("Ticket creado correctamente", "ok");
 
     } catch (error) {
         console.error(error);
