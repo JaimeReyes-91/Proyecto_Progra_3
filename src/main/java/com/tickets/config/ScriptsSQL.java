@@ -1,5 +1,7 @@
 package com.tickets.config;
 
+// En esta clase se encuentran los Scripts para crear las tablas necesarias para el funcionamiento de la app.
+// Todos los Scripts verifican con IF NOT EXIST para no cometer errores aunque se ejecutre varias veces. 
 public class ScriptsSQL {
 
 	public static final String TABLA_USUARIOS = """

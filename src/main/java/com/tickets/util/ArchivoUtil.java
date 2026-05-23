@@ -8,10 +8,14 @@ import java.nio.file.Paths;
 import java.nio.file.StandardCopyOption;
 import java.util.UUID;
 
+// Este apartado se ha configurado para gestionar archivos ajuntos subidos por los usuarios, en especial al crear tickets.
 public class ArchivoUtil {
 
+	// En este directorio se guardan todos los archivos.
 	private static final String directorio_upload = "C:/tickets/uploads/";
 
+	
+	// En esta configuración se trata de aplicar la orden de guardar un archivo. Si ya existe le modifica el nombre de forma aleatoria 
     public static String guardarArchivo(
             InputStream input,
             String nombreOriginal
@@ -41,6 +45,7 @@ public class ArchivoUtil {
         return nombreGuardado;
     }
 
+    // Este codigo se encarga de extraer la extención de un archivo que se ha guardado.
     public static String obtenerExtension(String nombre) {
 
         int index = nombre.lastIndexOf('.');
@@ -52,6 +57,7 @@ public class ArchivoUtil {
         return nombre.substring(index);
     }
 
+    // Acá se construye la ruta absoluta para un archivo qu está almacenado.
     public static String obtenerRutaCompleta(
             String nombreGuardado
     ) {
