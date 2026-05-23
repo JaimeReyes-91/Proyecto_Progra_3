@@ -110,8 +110,12 @@ public class TicketRecurso {
                             default         -> "Estado actualizado a " + nuevoEstado.name();
                         };
                 
-                Integer asignadoA = nuevoEstado == EstadoTicket.ASIGNADO ? actorId : null;
+                Ticket ticketActual = ticketServicio.buscarPorId(id);
 
+                Integer asignadoA = nuevoEstado == EstadoTicket.ASIGNADO 
+                    ? Integer.valueOf(actorId)
+                    : ticketActual.getAsignadoA();
+                
                 ticketServicio.cambiarEstado(
                     id,
                     nuevoEstado,
