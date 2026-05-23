@@ -184,19 +184,15 @@ function renderRecientes(tickets) {
                 </span>
             </td>
 
-            <td>
-
-                <button
-                    class="btn small secondary"
-                    onclick="verTimeline(
-                        ${ticket.id},
-                        '${ticket.codigo}'
-                    )"
-                >
-                    🕓
-                </button>
-
-            </td>
+			<td>
+			                <button
+			                    class="btn small secondary btn-timeline"
+			                    onclick="verTimeline(${ticket.id}, '${ticket.codigo}')"
+			                    title="Ver Timeline"
+			                >
+			                    <img src="img/cronologiaColor.png" alt="Timeline" class="icono-timeline">
+			                </button>
+			            </td>
 
         </tr>
 
@@ -233,19 +229,14 @@ function renderTablaNuevos(tickets) {
             <td>${escapar(obtenerNombreSolicitante(ticket.creadoPor))}</td>
 
 			<td>
-
-			    <button
-			        class="btn small secondary"
-			        onclick="verTimeline(
-			            ${ticket.id},
-			            '${ticket.codigo}'
-			        )"
-			    >
-			        🕓
-			    </button>
-
-			</td>
-
+						    <button
+						        class="btn small secondary btn-timeline"
+						        onclick="verTimeline(${ticket.id}, '${ticket.codigo}')"
+						        title="Ver Timeline"
+						    >
+						        <img src="img/cronologiaColor.png" alt="Timeline" class="icono-timeline">
+						    </button>
+						</td>
 			<td class="actions">
 
 			    <button
@@ -305,18 +296,14 @@ function renderMisTickets(tickets) {
             <td>${escapar(obtenerNombreSolicitante(ticket.creadoPor))}</td>
 
 			<td>
-
-			    <button
-			        class="btn small secondary"
-			        onclick="verTimeline(
-			            ${ticket.id},
-			            '${ticket.codigo}'
-			        )"
-			    >
-			        <i class="fa-solid fa-clock-rotate-left"></i>
-			    </button>
-
-			</td>
+						    <button
+						        class="btn small secondary btn-timeline"
+						        onclick="verTimeline(${ticket.id}, '${ticket.codigo}')"
+						        title="Ver Timeline"
+						    >
+						        <img src="img/cronologiaColor.png" alt="Timeline" class="icono-timeline">
+						    </button>
+						</td>
 
 			<td class="actions">
 

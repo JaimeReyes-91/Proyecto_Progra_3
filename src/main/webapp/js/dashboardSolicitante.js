@@ -1,5 +1,10 @@
+//lista para guardar los tickets del solicitante actual
 let tickets = [];
+
+//Relacion de id usuario con su nombre
 let mapaUsuarios = {};
+
+// Variables temporales para guardar el ticket y el estado que se va a cambiar
 let _pendienteId    = null;
 let _pendienteEstado = null;
 
@@ -9,9 +14,7 @@ document.addEventListener("DOMContentLoaded", () => {
     cargarDashboard();
 });
 
-// ─────────────────────────────────────────
 // SESIÓN
-// ─────────────────────────────────────────
 function protegerSesion() {
     const usuarioId = localStorage.getItem("usuarioId");
     const rol       = localStorage.getItem("rol");
@@ -21,14 +24,14 @@ function protegerSesion() {
         return;
     }
 
+	
+	//verificar, si el usuario no es solicitante lo redirige al dashboard de soporte
     if (rol !== "SOLICITANTE") {
         window.location.href = "dashboardSoporte.html";
     }
 }
 
-// ─────────────────────────────────────────
 // NAVEGACIÓN
-// ─────────────────────────────────────────
 function prepararNavegacion() {
     const nombre = localStorage.getItem("nombre") || "Usuario";
     const rol    = localStorage.getItem("rol") || "";
@@ -53,12 +56,12 @@ function prepararNavegacion() {
     });
 }
 
-// ─────────────────────────────────────────
 // CARGA PRINCIPAL
-// ─────────────────────────────────────────
 async function cargarDashboard() {
     const usuarioId = parseInt(localStorage.getItem("usuarioId"), 10);
 
+	
+	//cargar los tickets y usuarios desde el backend
     try {
 		const [resTickets, resUsuarios] = await Promise.all([
             fetch(API_URL + "/tickets"),
@@ -76,6 +79,8 @@ async function cargarDashboard() {
         // Solo los tickets del solicitante actual
         tickets = todos.filter(t => t.creadoPor === usuarioId);
 
+		
+		//obtener la ultima observacion de cada ticket para mostrar en la tabla
 		await Promise.all(tickets.map(async ticket => {
 	        try {
 	            const res    = await fetch(`${API_URL}/timeline/${ticket.id}`);
@@ -102,9 +107,7 @@ async function cargarDashboard() {
     }
 }
 
-// ─────────────────────────────────────────
 // KPIs
-// ─────────────────────────────────────────
 function actualizarKPIs() {
     document.getElementById("totalTickets").textContent      = tickets.length;
     document.getElementById("ticketsCreados").textContent    = tickets.filter(t => t.estadoActual === "CREADO").length;
@@ -113,11 +116,9 @@ function actualizarKPIs() {
     document.getElementById("ticketsCerrados").textContent   = tickets.filter(t => ["FINALIZADO", "RECHAZADO", "DEVUELTO"].includes(t.estadoActual)).length;
 }
 
-// ─────────────────────────────────────────
 // ALERTA DE VALIDACIÓN PENDIENTE (idea nueva)
 // Muestra una sección destacada si hay tickets
 // que el solicitante necesita aprobar o devolver
-// ─────────────────────────────────────────
 function mostrarAlertaValidacion() {
     const pendientes = tickets.filter(t => t.estadoActual === "VALIDACION");
     const seccion    = document.getElementById("seccionValidacion");
@@ -156,13 +157,13 @@ function mostrarAlertaValidacion() {
     `).join("");
 }
 
-// ─────────────────────────────────────────
 // TABLA CON BÚSQUEDA + TIMELINE + ACCIONES
-// ─────────────────────────────────────────
 function renderTickets() {
     const tabla  = document.getElementById("tablaTickets");
     const filtro = document.getElementById("filtroTickets").value.trim().toLowerCase();
 
+	
+	//filtro de busqueda
     const visibles = tickets.filter(ticket => {
         const texto = [
             ticket.codigo,
@@ -173,6 +174,7 @@ function renderTickets() {
         return texto.includes(filtro);
     });
 
+	//Si no hay resultados solo muestra un mensaje
     if (!visibles.length) {
         tabla.innerHTML = `
             <tr>
@@ -184,7 +186,7 @@ function renderTickets() {
         return;
     }
 
-	// ... (código anterior de la función renderTickets)
+	// Generar una fila para cada ticket visible, ultima observacion, timeline y acciones disponibles
 
 	    tabla.innerHTML = visibles.map(ticket => `
 	        <tr>
@@ -210,7 +212,7 @@ function renderTickets() {
 	                    onclick="verTimeline(${ticket.id}, '${escapar(ticket.codigo)}')"
 	                    title="Ver Timeline"
 	                >
-	                    <img src="img/cronologia.png" alt="Timeline" class="icono-timeline">
+	                    <img src="img/cronologiaColor.png" alt="Timeline" class="icono-timeline">
 	                </button>
 	            </td>
 	            <td>
@@ -222,12 +224,12 @@ function renderTickets() {
 	    `).join("");
 	}
 
-	// ... (sigue el código con renderAcciones)
+	
 
 
 function renderAcciones(ticket) {
 
-    // En VALIDACION: puede Aprobar o Devolver
+    // Cuando se encuentra en VALIDACION: puede aprobar o devolver
     if (ticket.estadoActual === "VALIDACION") {
         return `
             <button
@@ -247,7 +249,7 @@ function renderAcciones(ticket) {
         `;
     }
 
-    // En CREADO: puede eliminar
+    // En CREADO puede eliminar
     if (ticket.estadoActual === "CREADO") {
         return `
             <button
@@ -259,23 +261,23 @@ function renderAcciones(ticket) {
             </button>
         `;
     }
-
+	
+	//Para el solicitante los demas estados no tienen acciones disponibles
     return `<span class="text-muted">Sin acciones</span>`;
 }
 
-// ─────────────────────────────────────────
 // CAMBIO DE ESTADO (con modal de observación)
-// ─────────────────────────────────────────
 function cambiarEstado(id, estado) {
     _pendienteId    = id;
     _pendienteEstado = estado;
 
-	
+	//Finalizado no requiere una observacion
 	if (estado === "FINALIZADO") {
 	        confirmarCambioEstado();
 	        return;
 	    }
-		
+	
+	//Para mostrar el modal con su titulo correspondiente	
     const titulos = {
         DEVUELTO:   "Devolver ticket"
     };
@@ -296,6 +298,7 @@ async function confirmarCambioEstado() {
     const id          = _pendienteId;
     const estado      = _pendienteEstado;
 
+	//Al devolver exige una observacion con el motivo de devolucion]
     if (estado === "DEVUELTO" && !observacion) {
 		const error = document.getElementById("errorObservacion");
 	    error.textContent = "Debe indicar el motivo de devolución";
@@ -303,6 +306,7 @@ async function confirmarCambioEstado() {
 	    return;
     }
 
+	//Para enviar la petición PUT al backend con el nuevo estado y el actor que realiza el cambio
     try {
         const response = await fetch(
             `${API_URL}/tickets/${id}/${estado}/${actorId}`,
@@ -331,10 +335,11 @@ async function confirmarCambioEstado() {
     }
 }
 
-// ─────────────────────────────────────────
+
 // ELIMINAR
-// ─────────────────────────────────────────
+
 async function eliminarTicket(id) {
+	//Confirmar la acción de eliminar o cancelar
     const confirmar = confirm("¿Desea eliminar este ticket?");
     if (!confirmar) return;
 
@@ -355,9 +360,9 @@ async function eliminarTicket(id) {
     }
 }
 
-// ─────────────────────────────────────────
+
 // TIMELINE
-// ─────────────────────────────────────────
+
 async function verTimeline(ticketId, codigo) {
     try {
         const response = await fetch(`${API_URL}/timeline/${ticketId}`);
@@ -396,9 +401,9 @@ async function verTimeline(ticketId, codigo) {
     }
 }
 
-// ─────────────────────────────────────────
+
 // MODALES
-// ─────────────────────────────────────────
+
 function cerrarModal() {
     document.getElementById("modalTimeline")?.classList.remove("activo");
 }
@@ -413,9 +418,7 @@ function cerrarModalObs() {
 	    _pendienteEstado = null;
 }
 
-// ─────────────────────────────────────────
 // UTILIDADES
-// ─────────────────────────────────────────
 function mostrarMensaje(texto, tipo) {
     const mensaje = document.getElementById("mensaje");
     if (!mensaje) return;
