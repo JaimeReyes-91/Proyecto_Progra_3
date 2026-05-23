@@ -14,9 +14,7 @@ document.addEventListener("DOMContentLoaded", () => {
     cargarDashboard();
 });
 
-// ─────────────────────────────────────────
 // SESIÓN
-// ─────────────────────────────────────────
 function protegerSesion() {
     const usuarioId = localStorage.getItem("usuarioId");
     const rol       = localStorage.getItem("rol");
@@ -33,9 +31,7 @@ function protegerSesion() {
     }
 }
 
-// ─────────────────────────────────────────
 // NAVEGACIÓN
-// ─────────────────────────────────────────
 function prepararNavegacion() {
     const nombre = localStorage.getItem("nombre") || "Usuario";
     const rol    = localStorage.getItem("rol") || "";
@@ -60,9 +56,7 @@ function prepararNavegacion() {
     });
 }
 
-// ─────────────────────────────────────────
 // CARGA PRINCIPAL
-// ─────────────────────────────────────────
 async function cargarDashboard() {
     const usuarioId = parseInt(localStorage.getItem("usuarioId"), 10);
 
@@ -113,9 +107,7 @@ async function cargarDashboard() {
     }
 }
 
-// ─────────────────────────────────────────
 // KPIs
-// ─────────────────────────────────────────
 function actualizarKPIs() {
     document.getElementById("totalTickets").textContent      = tickets.length;
     document.getElementById("ticketsCreados").textContent    = tickets.filter(t => t.estadoActual === "CREADO").length;
@@ -124,11 +116,9 @@ function actualizarKPIs() {
     document.getElementById("ticketsCerrados").textContent   = tickets.filter(t => ["FINALIZADO", "RECHAZADO", "DEVUELTO"].includes(t.estadoActual)).length;
 }
 
-// ─────────────────────────────────────────
 // ALERTA DE VALIDACIÓN PENDIENTE (idea nueva)
 // Muestra una sección destacada si hay tickets
 // que el solicitante necesita aprobar o devolver
-// ─────────────────────────────────────────
 function mostrarAlertaValidacion() {
     const pendientes = tickets.filter(t => t.estadoActual === "VALIDACION");
     const seccion    = document.getElementById("seccionValidacion");
@@ -167,9 +157,7 @@ function mostrarAlertaValidacion() {
     `).join("");
 }
 
-// ─────────────────────────────────────────
 // TABLA CON BÚSQUEDA + TIMELINE + ACCIONES
-// ─────────────────────────────────────────
 function renderTickets() {
     const tabla  = document.getElementById("tablaTickets");
     const filtro = document.getElementById("filtroTickets").value.trim().toLowerCase();
@@ -224,7 +212,7 @@ function renderTickets() {
 	                    onclick="verTimeline(${ticket.id}, '${escapar(ticket.codigo)}')"
 	                    title="Ver Timeline"
 	                >
-	                    <img src="img/cronologia.png" alt="Timeline" class="icono-timeline">
+	                    <img src="img/cronologiaColor.png" alt="Timeline" class="icono-timeline">
 	                </button>
 	            </td>
 	            <td>
@@ -236,7 +224,7 @@ function renderTickets() {
 	    `).join("");
 	}
 
-	// ... (sigue el código con renderAcciones)
+	
 
 
 function renderAcciones(ticket) {
@@ -261,7 +249,7 @@ function renderAcciones(ticket) {
         `;
     }
 
-    // En CREADO: puede eliminar
+    // En CREADO puede eliminar
     if (ticket.estadoActual === "CREADO") {
         return `
             <button
@@ -278,9 +266,7 @@ function renderAcciones(ticket) {
     return `<span class="text-muted">Sin acciones</span>`;
 }
 
-// ─────────────────────────────────────────
 // CAMBIO DE ESTADO (con modal de observación)
-// ─────────────────────────────────────────
 function cambiarEstado(id, estado) {
     _pendienteId    = id;
     _pendienteEstado = estado;
@@ -349,9 +335,9 @@ async function confirmarCambioEstado() {
     }
 }
 
-// ─────────────────────────────────────────
+
 // ELIMINAR
-// ─────────────────────────────────────────
+
 async function eliminarTicket(id) {
 	//Confirmar la acción de eliminar o cancelar
     const confirmar = confirm("¿Desea eliminar este ticket?");
@@ -374,9 +360,9 @@ async function eliminarTicket(id) {
     }
 }
 
-// ─────────────────────────────────────────
+
 // TIMELINE
-// ─────────────────────────────────────────
+
 async function verTimeline(ticketId, codigo) {
     try {
         const response = await fetch(`${API_URL}/timeline/${ticketId}`);
@@ -415,9 +401,9 @@ async function verTimeline(ticketId, codigo) {
     }
 }
 
-// ─────────────────────────────────────────
+
 // MODALES
-// ─────────────────────────────────────────
+
 function cerrarModal() {
     document.getElementById("modalTimeline")?.classList.remove("activo");
 }
@@ -432,9 +418,7 @@ function cerrarModalObs() {
 	    _pendienteEstado = null;
 }
 
-// ─────────────────────────────────────────
 // UTILIDADES
-// ─────────────────────────────────────────
 function mostrarMensaje(texto, tipo) {
     const mensaje = document.getElementById("mensaje");
     if (!mensaje) return;
