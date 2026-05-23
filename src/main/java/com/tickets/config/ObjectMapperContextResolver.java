@@ -7,9 +7,12 @@ import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 import jakarta.ws.rs.ext.ContextResolver;
 import jakarta.ws.rs.ext.Provider;
 
+// Este servicio fue incluido como proveedor personalizado de configuración para Jackson.
+// Es importante cuando se trabaja con distintos tipos de fecha y hora. 
 @Provider
 public class ObjectMapperContextResolver implements ContextResolver<ObjectMapper> {
 
+	// Acá se instancia el ObjetMapper
     private final ObjectMapper mapper;
 
     public ObjectMapperContextResolver() {
@@ -18,6 +21,7 @@ public class ObjectMapperContextResolver implements ContextResolver<ObjectMapper
         mapper.disable(SerializationFeature.WRITE_DATES_AS_TIMESTAMPS);
     }
 
+    // En este apartado se ha configurado el retorno del ObjectMapper.
     @Override
     public ObjectMapper getContext(Class<?> type) {
         return mapper;

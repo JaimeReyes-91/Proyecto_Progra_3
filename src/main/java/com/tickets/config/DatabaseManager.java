@@ -6,6 +6,7 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.Statement;
 
+// En esta clase se gestiona la base de datos de la aplicación.
 public class DatabaseManager {
 
     private static final String HOST = "jdbc:postgresql://localhost:5432/postgres";
@@ -33,6 +34,7 @@ public class DatabaseManager {
                             )
             ) {
 
+            	// Acá se verifica de que la base de datos exista, de lo contrario la crea
                 if (!existeBaseDatos(con)) {
 
                     crearBaseDatos(con);
@@ -58,7 +60,8 @@ public class DatabaseManager {
             e.printStackTrace();
         }
     }
-
+    
+    // Verifica que la base de datos exista en el servidor de PostgreSQL
     private static boolean existeBaseDatos(
             Connection con
     ) throws Exception {
@@ -82,6 +85,7 @@ public class DatabaseManager {
         }
     }
 
+    // Con esta instrucción se crea la base de datos en el servidor de PostgreSQL.
     private static void crearBaseDatos(
             Connection con
     ) throws Exception {
@@ -90,8 +94,7 @@ public class DatabaseManager {
                 "CREATE DATABASE " + DATABASE;
 
         try (
-                Statement st =
-                        con.createStatement()
+                Statement st = con.createStatement()
         ) {
 
             st.executeUpdate(sql);
