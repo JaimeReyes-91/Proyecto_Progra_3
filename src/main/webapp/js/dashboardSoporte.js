@@ -6,8 +6,10 @@ document.addEventListener("DOMContentLoaded", () => {
 
 });
 
+//Lista donde se guarda temporalmente los usuarios 
 let usuarios = [];
 
+// SESIÓN
 function protegerSesion() {
 
     const usuarioId = localStorage.getItem("usuarioId");
@@ -29,6 +31,7 @@ function protegerSesion() {
 
 }
 
+//NAVEGACIÓN
 function prepararNavegacion() {
 
     const nombre = localStorage.getItem("nombre") || "Usuario";
@@ -67,12 +70,15 @@ function prepararNavegacion() {
 
 }
 
+//CARGA PRINCIPAL
 async function cargarDashboard() {
 
     try {
 
         const response = await fetch(API_URL + "/tickets");
-        const usuarioId = parseInt(localStorage.getItem("usuarioId"), 10);
+		
+		//Convierte a número porque localStorage siempre devuelve string
+		const usuarioId = parseInt(localStorage.getItem("usuarioId"), 10);
 
 
         if (!response.ok) {
@@ -90,7 +96,7 @@ async function cargarDashboard() {
 		}
 
 
-        // Tickets nuevos para revisión
+        // Tickets nuevos para revisión, visibles para cualquier técnico de soporte
         const nuevos = tickets.filter(
             t => t.estadoActual === "CREADO"
         );
@@ -131,7 +137,7 @@ async function cargarDashboard() {
             ...validacion,
             ...devueltos
         ]);
-		
+		//Muestra los 5 tickets más recientes relacionados con este técnico
         const recientes = [...tickets]
             .filter(t => t.asignadoA === usuarioId || t.estadoActual === "CREADO")
             .reverse()
@@ -152,6 +158,7 @@ async function cargarDashboard() {
 
 }
 
+//Genera la tabla de actividad reciente con los últimos tickets.
 function renderRecientes(tickets) {
 
     const tabla = document.getElementById("tablaRecientes");
@@ -200,6 +207,8 @@ function renderRecientes(tickets) {
 
 }
 
+
+//Muestra los tickets nuevos que soporte debe aceptar o rechazar.
 function renderTablaNuevos(tickets) {
 
     const tabla = document.getElementById("tablaNuevos");
@@ -260,7 +269,7 @@ function renderTablaNuevos(tickets) {
     `).join("");
 
 }
-
+//Muestra los tickets asignados al técnico actual
 function renderMisTickets(tickets) {
 
     const tabla = document.getElementById("tablaMisTickets");
@@ -317,6 +326,7 @@ function renderMisTickets(tickets) {
 
 }
 
+//Devuelve la acción disponible para el ticket según su estado
 function renderAccionTicket(ticket) {
 
     // Solo tickets ASIGNADO o DEVUELTO
@@ -347,9 +357,11 @@ function renderAccionTicket(ticket) {
 
 }
 
+//Acepta un ticket y lo asigna al técnico actual
 async function aceptarTicket(id) {
 
-    const actorId = localStorage.getItem("usuarioId");
+	//Se toma el id del técnico desde sesión para registrarlo como asignado al ticket
+	const actorId = localStorage.getItem("usuarioId");
 
     try {
 
@@ -381,7 +393,8 @@ async function aceptarTicket(id) {
             "ok"
         );
 
-        await cargarDashboard();
+		//Recarga el dashboard para reflejar el cambio de estado
+		await cargarDashboard();
 
     } catch (error) {
 
@@ -393,6 +406,7 @@ async function aceptarTicket(id) {
 
 }
 
+//Rechaza un ticket solicitando una observación obligatoria
 async function rechazarTicket(id) {
 
     const actorId = localStorage.getItem("usuarioId");
@@ -400,7 +414,8 @@ async function rechazarTicket(id) {
     const observacion = prompt(
         "Ingrese la observación del rechazo:"
     );
-
+	
+	//No se permite rechazar sin justificación
     if (!observacion || observacion.trim() === "") {
 
         mostrarMensaje(
@@ -454,6 +469,7 @@ async function rechazarTicket(id) {
 
 }
 
+//Envía el ticket a validación después de registrar la solución aplicada
 async function enviarValidacion(id) {
 
     const actorId = localStorage.getItem("usuarioId");
@@ -461,7 +477,8 @@ async function enviarValidacion(id) {
     const observacion = prompt(
         "Describa la solución aplicada:"
     );
-
+	
+	//La solución es obligatoria antes de enviar a validación
     if (!observacion || observacion.trim() === "") {
 
         mostrarMensaje(
@@ -516,6 +533,7 @@ async function enviarValidacion(id) {
 
 }
 
+//Muestra mensajes de éxito o error en pantalla
 function mostrarMensaje(texto, tipo) {
 
     const mensaje = document.getElementById("mensaje");
@@ -529,7 +547,7 @@ function mostrarMensaje(texto, tipo) {
         : "message";
 
 }
-
+//Formatea el texto del estado para mostrarlo mejor
 function formatearEstado(estado) {
 
     return String(estado || "")
@@ -537,6 +555,7 @@ function formatearEstado(estado) {
 
 }
 
+//Busca el nombre del solicitante según su ID
 function obtenerNombreSolicitante(id) {
 
     const usuario = usuarios.find(
@@ -560,6 +579,7 @@ function escapar(valor) {
 
 }
 
+//Cierra la sesión y regresa al login
 function cerrarSesion(event) {
 
     event.preventDefault();
@@ -570,6 +590,7 @@ function cerrarSesion(event) {
 
 }
 
+//Carga y muestra el timeline de un ticket
 async function verTimeline(ticketId, codigo) {
 
     try {
@@ -663,6 +684,7 @@ async function verTimeline(ticketId, codigo) {
 
 }
 
+//Cierra el modal del timeline
 function cerrarModal() {
 
     document.getElementById(

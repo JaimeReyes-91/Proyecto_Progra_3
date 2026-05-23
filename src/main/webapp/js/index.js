@@ -1,5 +1,8 @@
 document.addEventListener("DOMContentLoaded", verificarBackend);
 
+
+//Hace una petición de prueba al backend y muestra si la conexión está funcionando.
+
 async function verificarBackend() {
     const estado = document.getElementById("estadoBackend");
 
