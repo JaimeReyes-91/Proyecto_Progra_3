@@ -1,12 +1,15 @@
+//Arreglo donde se almacenarán los usuarios obtenidos desde el backend
 let usuarios = [];
 
+// Evento que se ejecuta cuando la página termina de cargar.
 document.addEventListener("DOMContentLoaded", () => {
-    protegerSesion();
-    prepararNavegacion();
-    prepararFormulario();
-    listarUsuarios();
+    protegerSesion(); // Verifica que el usuario tenga sesión activa y rol correcto
+    prepararNavegacion(); // Pinta el nombre/rol en la barra lateral y enlaza eventos de UI
+    prepararFiltros(); // Enlaza los controles de búsqueda y filtro
+    cargarTickets(); // Obtiene tickets y usuarios desde la API
 });
 
+// Verifica que exista una sesión activa.
 function protegerSesion() {
     if (!localStorage.getItem("usuarioId")) {
         window.location.href = "login.html";
@@ -18,6 +21,7 @@ function protegerSesion() {
     }
 }
 
+// Prepara la información de navegación. Muestra el nombre y rol del usuario activo.
 function prepararNavegacion() {
     const nombre = localStorage.getItem("nombre") || "Usuario";
     const rol = localStorage.getItem("rol") || "";
@@ -26,12 +30,14 @@ function prepararNavegacion() {
     document.getElementById("logoutLink").addEventListener("click", cerrarSesion);
 }
 
+// Prepara los eventos del formulario. Permite guardar usuarios, cancelar edición y filtrar usuarios en la tabla.
 function prepararFormulario() {
     document.getElementById("usuarioForm").addEventListener("submit", guardarUsuario);
     document.getElementById("cancelarEdicion").addEventListener("click", limpiarFormulario);
     document.getElementById("filtroUsuarios").addEventListener("input", renderUsuarios);
 }
 
+// Consulta la lista de usuarios desde el backend.
 async function listarUsuarios() {
     try {
         const response = await fetch(API_URL + "/usuarios");
@@ -48,6 +54,7 @@ async function listarUsuarios() {
     }
 }
 
+// Dibuja la tabla de usuarios en pantalla.
 function renderUsuarios() {
     const tabla = document.getElementById("tablaUsuarios");
     const filtro = document.getElementById("filtroUsuarios").value.trim().toLowerCase();
@@ -62,12 +69,13 @@ function renderUsuarios() {
 
         return texto.includes(filtro);
     });
-
+    
+    // Si no hay usuarios que coincidan con el filtro, muestra un mensaje
     if (!visibles.length) {
         tabla.innerHTML = `<tr><td class="empty" colspan="6">No hay usuarios para mostrar.</td></tr>`;
         return;
     }
-
+    // Genera las filas de la tabla con los usuarios visibles
     tabla.innerHTML = visibles.map(usuario => `
         <tr>
             <td>${usuario.id}</td>
@@ -84,11 +92,13 @@ function renderUsuarios() {
         </tr>
     `).join("");
 }
-
+//Guarda un usuario nuevo o actualiza uno existente.
 async function guardarUsuario(event) {
     event.preventDefault();
 
+     // Obtiene el ID oculto del formulario para saber si es edición o creación
     const id = document.getElementById("usuarioId").value;
+    // Crea un objeto usuario con los datos ingresados en el formulario
     const usuario = {
         nombre: document.getElementById("nombre").value.trim(),
         correo: document.getElementById("correo").value.trim(),
@@ -97,6 +107,7 @@ async function guardarUsuario(event) {
         contrasena: document.getElementById("contrasena").value
     };
 
+    // Limpia mensajes anteriores
     mostrarMensaje("", "");
 
     try {
@@ -115,6 +126,7 @@ async function guardarUsuario(event) {
         }
 
         mostrarMensaje(data.mensaje || "Usuario guardado", "ok");
+        // Limpia el formulario y actualiza la tabla
         limpiarFormulario();
         await listarUsuarios();
     } catch (error) {
@@ -123,6 +135,8 @@ async function guardarUsuario(event) {
     }
 }
 
+
+// Carga los datos de un usuario en el formulario para editarlo.
 function editarUsuario(id) {
     const usuario = usuarios.find(item => item.id === id);
 
@@ -140,6 +154,7 @@ function editarUsuario(id) {
     document.getElementById("nombre").focus();
 }
 
+// Elimina un usuario por su ID.
 async function eliminarUsuario(id) {
     if (!confirm("¿Eliminar este usuario?")) {
         return;
@@ -163,12 +178,14 @@ async function eliminarUsuario(id) {
     }
 }
 
+//Limpia el formulario y lo regresa al modo de creación.
 function limpiarFormulario() {
     document.getElementById("usuarioForm").reset();
     document.getElementById("usuarioId").value = "";
     document.getElementById("tituloFormulario").textContent = "Crear usuario";
 }
 
+// Muestra mensajes en pantalla.
 function mostrarMensaje(texto, tipo) {
     const mensaje = document.getElementById("mensaje");
 
@@ -176,6 +193,7 @@ function mostrarMensaje(texto, tipo) {
     mensaje.className = texto ? `message show ${tipo}` : "message";
 }
 
+//  Escapa caracteres especiales para evitar que el navegador interprete texto como HTML.
 function escapar(valor) {
     return String(valor)
         .replaceAll("&", "&amp;")
@@ -184,7 +202,7 @@ function escapar(valor) {
         .replaceAll('"', "&quot;")
         .replaceAll("'", "&#039;");
 }
-
+// Cierra la sesión actual. Limpia los datos guardados en localStorage y redirige al login.
 function cerrarSesion(event) {
     event.preventDefault();
     localStorage.clear();
