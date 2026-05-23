@@ -7,6 +7,9 @@ import com.tickets.dao.ArchivoDAO;
 import com.tickets.modelo.Archivo;
 import com.tickets.util.ArchivoUtil;
 
+/* Es la parte en la que se encarga de gestionar la logica para subir guardar y consultar
+los archivos adjuntos*/ 
+
 public class ArchivoServicio {
 
     private final ArchivoDAO archivoDAO = new ArchivoDAO();

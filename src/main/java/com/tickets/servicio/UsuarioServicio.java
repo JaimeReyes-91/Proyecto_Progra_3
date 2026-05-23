@@ -5,6 +5,8 @@ import java.util.List;
 import com.tickets.dao.UsuarioDAO;
 import com.tickets.modelo.Usuario;
 
+// Es la encargada de validar la logita de los usuarios.
+
 public class UsuarioServicio {
 
     private final UsuarioDAO usuarioDAO =

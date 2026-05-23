@@ -1,5 +1,7 @@
 package com.tickets.modelo;
 
+// es el modelo que representa un usuario.
+
 import java.sql.Timestamp;
 
 public class Usuario {

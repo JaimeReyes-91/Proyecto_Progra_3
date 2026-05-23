@@ -1,5 +1,8 @@
 package com.tickets.modelo;
 import java.time.LocalDateTime;
+
+// este es el modelo para representar un archivo.
+
 public class Archivo {
 
 	private int id;

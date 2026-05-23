@@ -4,6 +4,8 @@ import jakarta.ws.rs.GET;
 import jakarta.ws.rs.Path;
 import jakarta.ws.rs.Produces;
 
+// valida que el backen este activo
+
 @Path("/test")
 public class TestRecurso {
 

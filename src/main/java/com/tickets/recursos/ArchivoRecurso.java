@@ -19,12 +19,15 @@ import jakarta.ws.rs.Produces;
 import jakarta.ws.rs.core.MediaType;
 import jakarta.ws.rs.core.Response;
 
+// Es el archivo que se encarga de las peticiones con realacion a los archivos
+
 @Path("/archivos")
 public class ArchivoRecurso {
 
     private final ArchivoServicio archivoServicio =
             new ArchivoServicio();
 
+        // Este metodo sirver para subir un archivo
     @POST
     @Path("/upload/{ticketId}")
     @Consumes(MediaType.MULTIPART_FORM_DATA)
@@ -60,6 +63,8 @@ public class ArchivoRecurso {
         }
     }
 
+    //Esta funcion nos ayuda a ver el archivo de un ticket
+
     @GET
     @Path("/ticket/{ticketId}")
     @Produces(MediaType.APPLICATION_JSON)
@@ -80,6 +85,8 @@ public class ArchivoRecurso {
                     .build();
         }
     }
+
+    // Este metodo sirve para para descargar y o abrir el archivo
 
     @GET
     @Path("/download/{id}")

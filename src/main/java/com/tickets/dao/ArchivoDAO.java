@@ -1,5 +1,8 @@
 package com.tickets.dao;
 
+/* La clase archivcos Dao Es para poder madejar los datos de los
+archivos adjuntos de los tickets.*/
+
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -10,6 +13,9 @@ import com.tickets.modelo.Archivo;
 import com.tickets.util.ConexionDB;
 
 public class ArchivoDAO {
+
+
+        // Guarda los archivos ajuntos a la base de datos
 
     public void guardarArchivo(Archivo archivo) throws Exception {
 
@@ -39,6 +45,7 @@ public class ArchivoDAO {
         }
     }
 
+        // lista los archivos de un ticket
     public List<Archivo> listarPorTicket(int ticketId)
             throws Exception {
 
@@ -82,6 +89,7 @@ public class ArchivoDAO {
         return lista;
     }
 
+    // busca el archivo por su Id
     public Archivo obtenerPorId(int id) throws Exception {
 
         String sql = "SELECT * FROM ticket_adjuntos WHERE id = ?";

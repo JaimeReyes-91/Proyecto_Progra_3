@@ -22,6 +22,8 @@ import jakarta.ws.rs.Produces;
 import jakarta.ws.rs.core.MediaType;
 import jakarta.ws.rs.core.Response;
 
+// En general sirve para manejar los tickets en el sistema 
+
 @Path("/tickets")
 @Produces(MediaType.APPLICATION_JSON)
 @Consumes(MediaType.APPLICATION_JSON)
@@ -31,7 +33,7 @@ public class TicketRecurso {
     
     private final ArchivoServicio archivoServicio = new ArchivoServicio();
 
-
+    //Este lista los tickets
     @GET
     public Response listar() {
         try {
@@ -42,6 +44,7 @@ public class TicketRecurso {
         }
     }
 
+    // Se obtiene el ticket por medio del id
     @GET
     @Path("/{id}")
     public Response buscar(@PathParam("id") int id) {
@@ -53,6 +56,7 @@ public class TicketRecurso {
         }
     }
 
+    // se crea un nuevo ticket con o sin archivo.
     @POST
     @Consumes(MediaType.MULTIPART_FORM_DATA)
     public Response crear(
@@ -87,7 +91,7 @@ public class TicketRecurso {
         }
     }
 
-    // /system/tickets/{id}/{estado}/{actorId}
+    // aca se se cambia el estado del ticket
     @PUT
     @Path("/{id}/{estado}/{actorId}")
     @Consumes(MediaType.APPLICATION_JSON)
@@ -131,6 +135,7 @@ public class TicketRecurso {
         }
     }
 
+    // Se elimina un ticket
     @DELETE
     @Path("/{id}")
     public Response eliminar(@PathParam("id") int id) {

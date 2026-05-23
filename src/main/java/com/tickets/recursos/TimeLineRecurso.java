@@ -18,7 +18,7 @@ public class TimeLineRecurso {
 
 	private final TimeLineServicio servicio = new TimeLineServicio();
 
-	// /api/timeline/{ticketId}
+	// sirve para consultar el historial de tiempo de in ticket
 	@GET
 	@Path("/{ticketId}")
 	public Response listarPorTicket(@PathParam("ticketId") int ticketId) {
