@@ -172,15 +172,15 @@ function renderTickets() {
     tabla.innerHTML = visibles.map(ticket => `
         <tr>
             <td>${escapar(ticket.codigo)}</td>
+            
+            <td>${escapar(ticket.descripcion)}</td>
 
-            <td>
+			<td>
                 <span class="badge ${ticket.estadoActual} S">
                     ${formatearEstado(ticket.estadoActual)}
                 </span>
             </td>
-
-            <td>${escapar(ticket.descripcion)}</td>
-
+						
             <!-- Nombre del solicitante resuelto desde el mapa de usuarios -->
             <td>${escapar(obtenerNombreSolicitante(ticket.creadoPor))}</td>
 

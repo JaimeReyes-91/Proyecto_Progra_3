@@ -285,13 +285,14 @@ function renderMisTickets(tickets) {
 
             <td>${escapar(ticket.codigo || "-")}</td>
 
+			<td>${escapar(ticket.descripcion || "-")}</td>
             <td>
                 <span class="badge ${ticket.estadoActual} S">
                     ${formatearEstado(ticket.estadoActual)}
                 </span>
             </td>
 
-            <td>${escapar(ticket.descripcion || "-")}</td>
+            
 
             <td>${escapar(obtenerNombreSolicitante(ticket.creadoPor))}</td>
 
