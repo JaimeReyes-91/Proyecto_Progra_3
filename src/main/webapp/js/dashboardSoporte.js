@@ -72,6 +72,8 @@ async function cargarDashboard() {
     try {
 
         const response = await fetch(API_URL + "/tickets");
+        const usuarioId = parseInt(localStorage.getItem("usuarioId"), 10);
+
 
         if (!response.ok) {
 
@@ -95,20 +97,17 @@ async function cargarDashboard() {
 
         // Tickets asignados al técnico actual
         const asignados = tickets.filter(
-            t =>
-                t.estadoActual === "ASIGNADO"
+            t => t.estadoActual === "ASIGNADO" && Number(t.asignadoA) === usuarioId
         );
 
         // Tickets enviados a validación
         const validacion = tickets.filter(
-            t =>
-                t.estadoActual === "VALIDACION" 
+            t => t.estadoActual === "VALIDACION" && Number(t.asignadoA) === usuarioId
         );
 
         // Tickets devueltos por el solicitante
         const devueltos = tickets.filter(
-            t =>
-                t.estadoActual === "DEVUELTO" 
+             t => t.estadoActual === "DEVUELTO" && Number(t.asignadoA) === usuarioId
 				
         );
 		
@@ -133,9 +132,10 @@ async function cargarDashboard() {
             ...devueltos
         ]);
 		
-		const recientes = [...tickets]
-		    .reverse()
-		    .slice(0, 5);
+        const recientes = [...tickets]
+            .filter(t => t.asignadoA === usuarioId || t.estadoActual === "CREADO")
+            .reverse()
+            .slice(0, 5);
 
 		renderRecientes(recientes);
 

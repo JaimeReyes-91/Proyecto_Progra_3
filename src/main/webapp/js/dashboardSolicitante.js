@@ -136,6 +136,8 @@ function mostrarAlertaValidacion() {
             <div class="validacion-info">
                 <span class="validacion-codigo">${escapar(ticket.codigo || "-")}</span>
                 <span class="validacion-desc">${escapar(ticket.descripcion || "-")}</span>
+                <span class="validacion-codigo" class="validacion-desc">Observación</span>
+                <span id= "Observacion" class="validacion-desc">${escapar(ticket.ultimaObservacion || "-")}</span>
             </div>
             <div class="validacion-acciones">
                 <button
@@ -143,14 +145,14 @@ function mostrarAlertaValidacion() {
                     type="button"
                     onclick="cambiarEstado(${ticket.id}, 'FINALIZADO')"
                 >
-                    ✅ Aprobar
+                    Aprobar
                 </button>
                 <button
                     class="btn small danger"
                     type="button"
                     onclick="cambiarEstado(${ticket.id}, 'DEVUELTO')"
                 >
-                    ↩️ Devolver
+                    Devolver
                 </button>
             </div>
         </div>
